@@ -4,6 +4,11 @@ import { siteConfig } from "../config";
 const username = siteConfig.social?.github
   ? siteConfig.social.github.replace(/\/$/, "").split("/").pop()
   : null;
+
+// Generated daily by .github/workflows/snake.yml (Platane/snk, MIT-licensed)
+// and published to this repo's own "output" branch.
+const snakeBase =
+  "https://raw.githubusercontent.com/pushpendra-devera/pushpendra-portfolio/output";
 ---
 
 {
@@ -44,6 +49,22 @@ const username = siteConfig.social?.github
               >
                 Live chart unavailable right now.
               </p>
+              <img
+                id="gh-snake-light"
+                src={`${snakeBase}/github-snake.svg`}
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+                class="mt-4 w-full dark:hidden"
+              />
+              <img
+                id="gh-snake-dark"
+                src={`${snakeBase}/github-snake-dark.svg`}
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+                class="mt-4 w-full hidden dark:block"
+              />
             </div>
             <a
               href={siteConfig.social.github}
@@ -64,10 +85,18 @@ const username = siteConfig.social?.github
   (function () {
     const img = document.getElementById("gh-chart");
     const fallback = document.getElementById("gh-fallback");
-    if (!img || !fallback) return;
-    img.addEventListener("error", function () {
-      img.style.display = "none";
-      fallback.classList.remove("hidden");
+    if (img && fallback) {
+      img.addEventListener("error", function () {
+        img.style.display = "none";
+        fallback.classList.remove("hidden");
+      });
+    }
+    ["gh-snake-light", "gh-snake-dark"].forEach(function (id) {
+      const snake = document.getElementById(id);
+      if (!snake) return;
+      snake.addEventListener("error", function () {
+        snake.style.display = "none";
+      });
     });
   })();
 </script>
