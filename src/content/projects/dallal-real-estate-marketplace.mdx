@@ -1,0 +1,104 @@
+---
+title: "Dallal Real Estate Marketplace"
+slug: "dallal-real-estate-marketplace"
+summary: "A bilingual (English/Arabic) React Native real estate marketplace for Kuwait, with property search, listings, in-app calling, broker verification, and analytics, published on the App Store and Google Play."
+status: "active"
+visibility: "public"
+noindex: false
+projectType: "Mobile application (React Native, iOS & Android)"
+role: "React Native Developer, core contributor"
+startDate: "January 2026"
+repositoryVisibility: "private"
+constraints:
+  - "Bilingual English/Arabic UI, including RTL layout support"
+  - "Real-time voice/video calling that stays reliable across foreground, background, and killed app states"
+  - "A single API layer covering 100+ REST endpoints with authenticated, token-refreshing access"
+  - "Broker/civil-ID verification requiring OCR-based document parsing"
+stats:
+  - label: "Screens shipped"
+    value: "75+"
+  - label: "Feature modules"
+    value: "33"
+  - label: "REST endpoints"
+    value: "100+"
+  - label: "Analytics events"
+    value: "30+"
+stack:
+  - "React Native"
+  - "TypeScript"
+  - "React Navigation"
+  - "Axios"
+  - "i18next"
+  - "CometChat Calls SDK"
+  - "iOS CallKit"
+  - "Android ConnectionService"
+  - "Firebase Cloud Messaging"
+  - "Notifee"
+  - "PushKit VoIP"
+  - "Sentry"
+  - "Firebase Crashlytics"
+  - "GitHub Actions"
+  - "Jest"
+  - "React Testing Library"
+  - "hot-updater (OTA)"
+architecture: "The app is organized around a centralized Axios API client that injects JWT auth tokens, retries requests on 401 via refresh-token logic, supports request cancellation, and fronts 100+ REST endpoints. Real-time calling runs through the CometChat Calls SDK, wired into iOS CallKit and Android ConnectionService for native call UI, with FCM, Notifee, and PushKit VoIP handling incoming-call delivery across foreground, background, and killed app states. Localization runs through i18next with reusable RTL layout helpers shared across property search, listing, chat, and profile screens, rather than per-screen RTL handling."
+decisions:
+  - decision: "Centralize all API access through a single Axios client with JWT injection and refresh-token retry"
+    problem: "100+ REST endpoints needed consistent auth handling and session-refresh behavior instead of ad hoc per-call logic"
+    chosenApproach: "One Axios client with interceptors for token injection, 401 refresh-and-retry, and request cancellation, used as the single integration point during endpoint migration"
+    evidence: "Used to migrate and support authenticated access across 100+ REST endpoints"
+  - decision: "Handle incoming calls through native call UI (CallKit/ConnectionService) instead of an in-app-only call screen"
+    problem: "Calls needed to be handled reliably whether the app was foregrounded, backgrounded, or fully killed"
+    chosenApproach: "CometChat Calls SDK integrated with iOS CallKit and Android ConnectionService, driven by FCM, Notifee, and PushKit VoIP for incoming-call delivery"
+    evidence: "Delivered as incoming call handling across foreground, background, and killed-app states"
+  - decision: "Share RTL layout logic across screens instead of one-off per-screen handling"
+    problem: "English/Arabic localization needed consistent RTL behavior across multiple independently-built flows"
+    chosenApproach: "i18next plus reusable RTL layout helpers applied to property search, listing, chat, and profile workflows"
+performance:
+  - "Memoization to cut unnecessary re-renders"
+  - "Pagination for large property listing sets"
+  - "Lazy loading of screens and media"
+  - "Map marker stabilization to fix rendering jitter"
+  - "Gallery flicker fixes in the property media viewer"
+  - "Font bundle cleanup to reduce app size/load time"
+  - "Sentry for runtime error tracking"
+  - "Firebase Crashlytics for crash reporting"
+testing:
+  - "Jest and React Testing Library for feature validation"
+  - "TypeScript checks as part of the release workflow"
+  - "ESLint"
+  - "lefthook pre-commit checks"
+releaseEngineering: "CI/CD and TypeScript/test checks run through GitHub Actions. Releases ship through the standard App Store and Google Play processes, supplemented by OTA updates via hot-update channels (hot-updater) for faster iteration between store releases."
+outcomes:
+  - "Shipped 75+ screens across 33 feature modules to production on the App Store and Google Play"
+  - "Migrated and stabilized authenticated access across 100+ REST endpoints behind one API client"
+  - "Instrumented 30+ tracked analytics events in the property listing flow"
+---
+
+## Overview
+
+Dallal is a bilingual (English/Arabic) real estate marketplace app for the
+Kuwait market, built in React Native for Android and iOS. It covers property
+search, listings, in-app messaging and calling, broker/civil-ID verification,
+maps, and analytics, and is published on both the App Store and Google Play.
+
+## Context
+
+The app needed to work as one coherent product across two languages with
+different reading directions (LTR English, RTL Arabic), support real-time
+voice/video calls that stay reliable no matter what state the app is in on
+the device, and grow its API surface — the client integration eventually
+covered 100+ REST endpoints — without each new endpoint reinventing auth and
+retry handling.
+
+A multi-step property listing flow was also part of the product: address
+autofill (PACI), OCR-based civil ID parsing for verification, AI-generated
+listing descriptions, media upload, and validation, instrumented with 30+
+analytics events to track usage through that flow.
+
+---
+
+_This case study is drawn directly from verified resume content. Limitations,
+lessons learned, and next steps aren't included here, since they weren't part
+of that original source material — adding them without a verified basis would
+mean guessing, which this site avoids._

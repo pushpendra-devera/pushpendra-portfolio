@@ -1,0 +1,324 @@
+---
+import { getCollection, render } from "astro:content";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import { siteConfig } from "../../config";
+import "../../styles/global.css";
+
+export async function getStaticPaths() {
+  const entries = await getCollection(
+    "projects",
+    ({ data }) => data.visibility === "public" && data.status !== "draft",
+  );
+  return entries.map((entry) => ({
+    params: { slug: entry.data.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+
+const metaRow = [
+  d.role,
+  d.projectType,
+  [d.startDate, d.endDate].filter(Boolean).join(" - "),
+].filter(Boolean);
+
+const controlStatusLabel: Record<string, string> = {
+  implemented: "Implemented",
+  planned: "Planned",
+  not_used: "Not used",
+};
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={d.summary} />
+    {d.noindex && <meta name="robots" content="noindex" />}
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <title>{d.title} - {siteConfig.name}</title>
+
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content={new URL(Astro.url.pathname, Astro.site)} />
+    <meta property="og:title" content={`${d.title} - ${siteConfig.name}`} />
+    <meta property="og:description" content={d.summary} />
+    <meta property="og:site_name" content={siteConfig.name} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={`${d.title} - ${siteConfig.name}`} />
+    <meta name="twitter:description" content={d.summary} />
+  </head>
+  <body>
+    <Header />
+    <main class="max-w-3xl mx-auto px-6 pt-28 pb-16 sm:pt-32 sm:pb-24">
+      <a href="/projects" class="text-sm text-gray-600 hover:text-black"
+        >&larr; All projects</a
+      >
+      <h1 class="mt-4 text-3xl sm:text-4xl font-bold text-gray-900">
+        {d.title}
+      </h1>
+      <p class="mt-2 text-lg text-gray-600">{d.summary}</p>
+      {
+        metaRow.length > 0 && (
+          <p class="mt-3 text-sm text-gray-500">{metaRow.join(" · ")}</p>
+        )
+      }
+      {
+        d.repositoryUrl && (
+          <a
+            href={d.repositoryUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="mt-2 inline-block text-sm underline underline-offset-4 text-gray-600 hover:text-black"
+          >
+            View repository
+          </a>
+        )
+      }
+
+      {
+        d.stats && d.stats.length > 0 && (
+          <div class="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {d.stats.map((stat) => (
+              <div class="rounded-xl border border-gray-200 p-4 text-center">
+                <div
+                  class="text-2xl sm:text-3xl font-bold"
+                  style={`color: ${siteConfig.accentColor}`}
+                >
+                  {stat.value}
+                </div>
+                <div class="mt-1 text-xs sm:text-sm text-gray-600">
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </div>
+        )
+      }
+
+      {
+        d.stack && d.stack.length > 0 && (
+          <div class="mt-8 flex flex-wrap gap-2">
+            {d.stack.map((item) => (
+              <span class="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm font-medium">
+                {item}
+              </span>
+            ))}
+          </div>
+        )
+      }
+
+      <div class="mt-8 prose-content">
+        <Content />
+      </div>
+
+      {
+        d.workflow && d.workflow.length > 0 && (
+          <section class="mt-10">
+            <h2 class="text-xl font-bold text-gray-900">Workflow</h2>
+            <ol class="mt-3 space-y-1 list-decimal list-inside text-gray-600">
+              {d.workflow.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ol>
+          </section>
+        )
+      }
+
+      {
+        d.constraints && d.constraints.length > 0 && (
+          <section class="mt-10">
+            <h2 class="text-xl font-bold text-gray-900">Constraints</h2>
+            <ul class="mt-3 space-y-1 list-disc list-inside text-gray-600">
+              {d.constraints.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+
+      {
+        d.architecture && (
+          <section class="mt-10">
+            <h2 class="text-xl font-bold text-gray-900">Architecture</h2>
+            <p class="mt-3 text-gray-600 leading-relaxed">{d.architecture}</p>
+          </section>
+        )
+      }
+
+      {
+        d.decisions && d.decisions.length > 0 && (
+          <section class="mt-10">
+            <h2 class="text-xl font-bold text-gray-900">
+              Key engineering decisions
+            </h2>
+            <div class="mt-4 space-y-6">
+              {d.decisions.map((decision) => (
+                <div class="border-l-2 border-gray-200 pl-4">
+                  <h3 class="font-semibold text-gray-900">
+                    {decision.decision}
+                  </h3>
+                  {decision.problem && (
+                    <p class="mt-1 text-sm text-gray-600">
+                      <span class="font-medium">Problem:</span>{" "}
+                      {decision.problem}
+                    </p>
+                  )}
+                  {decision.chosenApproach && (
+                    <p class="mt-1 text-sm text-gray-600">
+                      <span class="font-medium">Approach:</span>{" "}
+                      {decision.chosenApproach}
+                    </p>
+                  )}
+                  {decision.evidence && (
+                    <p class="mt-1 text-sm text-gray-600">
+                      <span class="font-medium">Evidence:</span>{" "}
+                      {decision.evidence}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        )
+      }
+
+      {
+        d.safetyControls && d.safetyControls.length > 0 && (
+          <section class="mt-10">
+            <h2 class="text-xl font-bold text-gray-900">Safety controls</h2>
+            <ul class="mt-4 space-y-3">
+              {d.safetyControls.map((control) => (
+                <li>
+                  <div class="flex flex-wrap items-baseline gap-2">
+                    <span class="font-medium text-gray-900">
+                      {control.name}
+                    </span>
+                    <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-700">
+                      {controlStatusLabel[control.status] ?? control.status}
+                    </span>
+                  </div>
+                  {control.detail && (
+                    <p class="mt-1 text-sm text-gray-600">{control.detail}</p>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+
+      {
+        d.privacyControls && d.privacyControls.length > 0 && (
+          <section class="mt-10">
+            <h2 class="text-xl font-bold text-gray-900">Privacy controls</h2>
+            <ul class="mt-4 space-y-3">
+              {d.privacyControls.map((control) => (
+                <li>
+                  <div class="flex flex-wrap items-baseline gap-2">
+                    <span class="font-medium text-gray-900">
+                      {control.name}
+                    </span>
+                    <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-700">
+                      {controlStatusLabel[control.status] ?? control.status}
+                    </span>
+                  </div>
+                  {control.detail && (
+                    <p class="mt-1 text-sm text-gray-600">{control.detail}</p>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+
+      {
+        d.performance && d.performance.length > 0 && (
+          <section class="mt-10">
+            <h2 class="text-xl font-bold text-gray-900">
+              Performance &amp; stability
+            </h2>
+            <ul class="mt-3 space-y-1 list-disc list-inside text-gray-600">
+              {d.performance.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+
+      {
+        d.testing && d.testing.length > 0 && (
+          <section class="mt-10">
+            <h2 class="text-xl font-bold text-gray-900">Testing</h2>
+            <ul class="mt-3 space-y-1 list-disc list-inside text-gray-600">
+              {d.testing.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+
+      {
+        d.releaseEngineering && (
+          <section class="mt-10">
+            <h2 class="text-xl font-bold text-gray-900">Release engineering</h2>
+            <p class="mt-3 text-gray-600 leading-relaxed">
+              {d.releaseEngineering}
+            </p>
+          </section>
+        )
+      }
+
+      {
+        d.outcomes && d.outcomes.length > 0 && (
+          <section class="mt-10">
+            <h2 class="text-xl font-bold text-gray-900">Verified outcomes</h2>
+            <ul class="mt-3 space-y-1 list-disc list-inside text-gray-600">
+              {d.outcomes.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+
+      {
+        d.limitations && d.limitations.length > 0 && (
+          <section class="mt-10">
+            <h2 class="text-xl font-bold text-gray-900">
+              Limitations &amp; remaining risks
+            </h2>
+            <ul class="mt-3 space-y-1 list-disc list-inside text-gray-600">
+              {d.limitations.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+
+      {
+        d.lessons && d.lessons.length > 0 && (
+          <section class="mt-10">
+            <h2 class="text-xl font-bold text-gray-900">What I learned</h2>
+            <ul class="mt-3 space-y-1 list-disc list-inside text-gray-600">
+              {d.lessons.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+    </main>
+    <Footer />
+  </body>
+</html>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://pushpendra-portfolio-theta.vercel.app/sitemap-index.xml

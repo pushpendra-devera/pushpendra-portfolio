@@ -1,0 +1,39 @@
+{
+  "name": "pushpendra-portfolio",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "typecheck": "astro check",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "4.3.14",
+    "@astrojs/rss": "4.0.19",
+    "@astrojs/sitemap": "3.7.3",
+    "@tailwindcss/vite": "4.1.11",
+    "astro": "^5.12.3",
+    "tailwindcss": "4.1.11"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "@astrojs/check": "0.9.10",
+    "eslint": "10.8.1",
+    "typescript-eslint": "8.67.0",
+    "@typescript-eslint/parser": "8.67.0",
+    "eslint-plugin-astro": "3.1.0",
+    "eslint-config-prettier": "10.1.8",
+    "prettier": "3.9.6",
+    "prettier-plugin-astro": "0.14.1",
+    "@playwright/test": "1.62.1",
+    "@axe-core/playwright": "4.13.0",
+    "vercel": "59.1.3"
+  }
+}
