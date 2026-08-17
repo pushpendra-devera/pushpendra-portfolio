@@ -5,6 +5,13 @@ test("homepage has no horizontal overflow, passes accessibility checks, and matc
   page,
 }, testInfo) => {
   await page.goto("/");
+  // Wait for the hero's staggered fade-in (opacity 0 -> 1) to finish so
+  // axe doesn't scan text mid-animation and misread its transient low
+  // opacity as a real contrast failure.
+  await page.waitForFunction(() => {
+    const els = document.querySelectorAll(".animate-fade-in");
+    return Array.from(els).every((el) => getComputedStyle(el).opacity === "1");
+  });
 
   const hasOverflow = await page.evaluate(
     () =>

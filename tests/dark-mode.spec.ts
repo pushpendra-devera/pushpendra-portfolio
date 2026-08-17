@@ -23,6 +23,8 @@ const pages = [
   "/projects",
   "/projects/dallal-real-estate-marketplace",
   "/projects/ai-job-agent",
+  "/notes",
+  "/notes/jwt-refresh-token-retry",
 ];
 
 for (const path of pages) {
@@ -36,6 +38,14 @@ for (const path of pages) {
     await page.reload();
 
     await expect(page.locator("html")).toHaveClass(/dark/);
+    // Wait for the hero's staggered fade-in to finish before scanning, so
+    // axe doesn't catch text mid-animation at transient low opacity.
+    await page.waitForFunction(() => {
+      const els = document.querySelectorAll(".animate-fade-in");
+      return Array.from(els).every(
+        (el) => getComputedStyle(el).opacity === "1",
+      );
+    });
 
     const hasOverflow = await page.evaluate(
       () =>

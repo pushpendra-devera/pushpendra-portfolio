@@ -1,0 +1,50 @@
+---
+title: "Not every decision needs a language model"
+slug: "deterministic-vs-llm-judgment"
+summary: "In agent design, the question isn't 'can an LLM do this' — it's whether the decision actually requires reading comprehension, or just comparison."
+publishDate: "2026-08-18"
+tags: ["AI agents", "LLM", "System design"]
+status: "published"
+visibility: "public"
+noindex: false
+sourceProject: "ai-job-agent"
+---
+
+It's tempting, once an agent has a model in the loop, to route every
+decision through it. If the model can read a job posting and judge
+whether the required skills match, why not also let it decide the salary
+threshold, or the retry limit, or whether an application state transition
+is valid?
+
+## The distinction that matters
+
+The useful line isn't "simple vs. complex," it's **reading comprehension
+vs. comparison**. Judging whether a posting's described responsibilities
+actually match a candidate's experience requires understanding language —
+that's a real LLM task. Checking whether a stated salary is above a
+configured minimum, or whether an application is already in a
+non-retryable state, isn't comprehension at all. It's a comparison against
+a value the system already has. Routing that through a model adds cost,
+adds latency, and adds a new place for a policy to silently drift, for a
+decision that was never actually ambiguous.
+
+## Where the line landed in practice
+
+On the AI Job Agent project, fit-scoring splits along exactly this line:
+four categories that need reading comprehension (required skills,
+technology stack, experience level, preferred skills) go through the
+model. Five categories that are pure comparison (seniority, location,
+remote preference, employment type, salary) are application code. Retry
+limits, application state transitions, and destination-URL validation are
+deterministic too, for the same reason.
+
+## The payoff that's easy to miss
+
+The obvious benefit is cost and latency — fewer model calls. The less
+obvious one showed up when a model call actually failed: because the
+deterministic categories don't depend on the model at all, scoring stays
+partially useful even when the LLM call errors out. A system where
+everything goes through the model degrades to nothing the moment the
+model is unavailable. A system where only the parts that need judgment go
+through the model degrades gracefully, because most of what it was doing
+never needed judgment in the first place.

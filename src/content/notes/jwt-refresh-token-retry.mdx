@@ -1,0 +1,54 @@
+---
+title: "Centralizing auth: one API client for 100+ endpoints"
+slug: "jwt-refresh-token-retry"
+summary: "Why a single Axios client with token injection and 401 refresh-retry beat handling auth per-call across a growing REST surface."
+publishDate: "2026-08-18"
+tags: ["React Native", "Axios", "API design"]
+status: "published"
+visibility: "public"
+noindex: false
+sourceProject: "dallal-real-estate-marketplace"
+---
+
+On the Dallal Real Estate Marketplace app, the REST API surface grew past 100
+endpoints over the course of the project. Property search, listings, chat,
+calling, verification, maps, analytics — each area added its own set of
+calls. The question that mattered wasn't "how do we call this endpoint,"
+it was "how do we make sure every endpoint behaves the same way when auth
+goes stale."
+
+## The problem with per-call auth handling
+
+If every screen or hook manages its own token attachment and its own
+"what happens on a 401" logic, two things go wrong as the app grows:
+
+- Behavior drifts. One screen retries once, another doesn't retry at all,
+  a third silently fails. None of that is a decision anyone made on
+  purpose — it's just what happens when the same problem gets solved N
+  times by N different people (or N different times by the same person).
+- Debugging an auth issue means checking every call site, not one place.
+
+## The approach
+
+The fix was a single Axios instance that every API call goes through,
+with interceptors handling three things:
+
+- **Token injection** — attach the current JWT to every outgoing request
+  automatically, so call sites never think about auth at all.
+- **401 refresh-and-retry** — when a request comes back unauthorized, the
+  interceptor pauses, refreshes the token, and retries the original
+  request transparently. The calling code sees a successful response or a
+  real error, never a raw 401.
+- **Request cancellation** — in-flight requests get cancelled cleanly on
+  navigation or unmount, so a slow response from a screen the user already
+  left doesn't land somewhere it shouldn't.
+
+## Why this held up as the app grew
+
+The real test of this pattern wasn't the first 10 endpoints, it was the
+next 90. Because every new endpoint goes through the same client, adding
+one never means re-deciding how auth works — that decision was made once,
+in one place, and every call site inherits it for free. That's the actual
+payoff of centralizing this: not that it's elegant, but that it's boring
+in exactly the way that lets 100+ endpoints share one auth story instead
+of drifting into a hundred slightly different ones.

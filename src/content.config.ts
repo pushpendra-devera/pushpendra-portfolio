@@ -68,4 +68,19 @@ const projects = defineCollection({
   }),
 });
 
-export const collections = { projects };
+const notes = defineCollection({
+  loader: glob({ pattern: "**/*.mdx", base: "./src/content/notes" }),
+  schema: z.object({
+    title: z.string(),
+    slug: z.string(),
+    summary: z.string(),
+    publishDate: z.string(),
+    tags: z.array(z.string()).optional(),
+    status: z.enum(["draft", "published"]),
+    visibility: z.enum(["public", "private"]),
+    noindex: z.boolean().default(false),
+    sourceProject: z.string().optional(),
+  }),
+});
+
+export const collections = { projects, notes };

@@ -10,6 +10,7 @@ export interface Education {
   degree: string;
   dateRange: string;
   achievements: string[];
+  affiliatedUniversity?: string;
 }
 
 export interface SiteConfig {
@@ -106,12 +107,15 @@ export const siteConfig: SiteConfig = {
       degree: "MCA",
       dateRange: "2020 - 2022",
       achievements: [],
+      affiliatedUniversity:
+        "Rajiv Gandhi Proudyogiki Vishwavidyalaya (RGPV), Bhopal",
     },
     {
       school: "St. Paul Institute of Professional Studies, Indore, India",
       degree: "B.Sc. (Computer Science)",
       dateRange: "2017 - 2020",
       achievements: [],
+      affiliatedUniversity: "Devi Ahilya Vishwavidyalaya (DAVV), Indore",
     },
   ],
 };

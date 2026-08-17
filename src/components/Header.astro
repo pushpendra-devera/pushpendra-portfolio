@@ -8,16 +8,24 @@ const publishedProjects = await getCollection(
   ({ data }) => data.visibility === "public" && data.status !== "draft",
 );
 const hasProjects = publishedProjects.length > 0;
+const publishedNotes = await getCollection(
+  "notes",
+  ({ data }) => data.visibility === "public" && data.status !== "draft",
+);
+const hasNotes = publishedNotes.length > 0;
 const hasExperience = siteConfig.experience && siteConfig.experience.length > 0;
 const hasEducation = siteConfig.education && siteConfig.education.length > 0;
 ---
 
 <header
   id="header"
-  class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+  class="fixed top-4 sm:top-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 w-[calc(100%-2rem)] sm:w-auto"
 >
-  <nav aria-label="Primary" class="max-w-7xl mx-auto px-4 sm:px-8 py-3 sm:py-4">
-    <ul class="flex items-center gap-3 sm:gap-8 justify-center flex-wrap">
+  <nav
+    aria-label="Primary"
+    class="glass-pill rounded-full mx-auto px-4 sm:px-6 py-2.5 sm:py-3 max-w-fit"
+  >
+    <ul class="flex items-center gap-3 sm:gap-6 justify-center flex-wrap">
       <li>
         <a
           href="/#about"
@@ -34,6 +42,18 @@ const hasEducation = siteConfig.education && siteConfig.education.length > 0;
               class="text-sm sm:text-base text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors font-medium"
             >
               Projects
+            </a>
+          </li>
+        )
+      }
+      {
+        hasNotes && (
+          <li>
+            <a
+              href="/notes"
+              class="text-sm sm:text-base text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors font-medium"
+            >
+              Notes
             </a>
           </li>
         )
@@ -62,31 +82,26 @@ const hasEducation = siteConfig.education && siteConfig.education.length > 0;
           </li>
         )
       }
+      {
+        siteConfig.social?.email && (
+          <li>
+            <a
+              href={`mailto:${siteConfig.social.email}?subject=${encodeURIComponent(
+                "Let's talk",
+              )}`}
+              class="inline-block px-4 py-1.5 rounded-full text-sm sm:text-base font-medium text-white bg-blue-700 dark:bg-blue-600 hover:bg-blue-800 dark:hover:bg-blue-700 transition-colors"
+            >
+              Hire Me
+            </a>
+          </li>
+        )
+      }
       <li>
         <ThemeToggle />
       </li>
     </ul>
   </nav>
 </header>
-
-<script>
-  window.addEventListener("scroll", () => {
-    const header = document.getElementById("header");
-    if (window.scrollY > 100) {
-      header?.classList.add(
-        "bg-white/80",
-        "dark:bg-gray-900/80",
-        "backdrop-blur-sm",
-      );
-    } else {
-      header?.classList.remove(
-        "bg-white/80",
-        "dark:bg-gray-900/80",
-        "backdrop-blur-sm",
-      );
-    }
-  });
-</script>
 
 <style>
   html {

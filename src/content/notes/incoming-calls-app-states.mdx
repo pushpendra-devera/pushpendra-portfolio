@@ -1,0 +1,51 @@
+---
+title: "Incoming calls don't care what state your app is in"
+slug: "incoming-calls-app-states"
+summary: "Handling voice/video calls reliably across foreground, background, and killed-app states means leaving the in-app call screen and using the platform's own call UI."
+publishDate: "2026-08-18"
+tags: ["React Native", "iOS", "Android", "Real-time"]
+status: "published"
+visibility: "public"
+noindex: false
+sourceProject: "dallal-real-estate-marketplace"
+---
+
+A common first instinct for in-app calling is to build a call screen: show
+it when a call comes in, let the user answer inside the app. That works
+right up until the app isn't in the foreground — and for a real-time
+feature like calling, "the app isn't in the foreground" isn't an edge
+case, it's the default state most of the time.
+
+## Three states, one behavior
+
+An incoming call has to work the same way whether the app is:
+
+- **Foregrounded** — the user is actively using it.
+- **Backgrounded** — the app is open but not visible.
+- **Killed** — the process isn't running at all.
+
+An in-app call screen only solves the first case. The other two need the
+operating system's own call handling, not the app's.
+
+## What that actually means
+
+On Dallal, incoming calls go through the CometChat Calls SDK, wired into
+each platform's native call infrastructure: iOS CallKit and Android
+ConnectionService. Push delivery for an incoming call comes through FCM,
+with Notifee handling local notification presentation and PushKit VoIP
+covering iOS's dedicated VoIP push channel. When a call arrives, it's the
+OS's native call UI that shows up — the same interface as a regular phone
+call — not a custom screen the app has to somehow render while backgrounded
+or not running.
+
+## Why this is the right tradeoff
+
+Building against the platform's call APIs is more work up front than a
+plain in-app screen — CallKit and ConnectionService both have real
+learning curves, and getting push delivery right across three different
+channels (FCM, Notifee, PushKit VoIP) means three things that each need
+to work, not one. But the alternative is a calling feature that silently
+stops working the moment the user switches apps, which for a
+messaging-and-calling product is most of the time it would actually be
+used. The native call UI isn't a nicer-looking fallback — for backgrounded
+and killed states, it's the only thing that works at all.

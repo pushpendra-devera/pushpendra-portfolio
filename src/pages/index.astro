@@ -6,6 +6,8 @@ import Experience from "../components/Experience.astro";
 import Education from "../components/Education.astro";
 import Footer from "../components/Footer.astro";
 import ThemeScript from "../components/ThemeScript.astro";
+import BackgroundBlobs from "../components/BackgroundBlobs.astro";
+import GitHubActivity from "../components/GitHubActivity.astro";
 import { siteConfig } from "../config";
 import "../styles/global.css";
 ---
@@ -22,7 +24,7 @@ import "../styles/global.css";
     <link
       rel="alternate"
       type="application/rss+xml"
-      title={`${siteConfig.name} - Projects`}
+      title={`${siteConfig.name} - Writing`}
       href={new URL("rss.xml", Astro.site)}
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -51,12 +53,14 @@ import "../styles/global.css";
     <meta name="twitter:image" content={new URL("og-image.png", Astro.site)} />
   </head>
   <body>
+    <BackgroundBlobs />
     <Header />
     <main>
       <Hero />
       <About />
       <Experience />
       <Education />
+      <GitHubActivity />
     </main>
     <Footer />
   </body>

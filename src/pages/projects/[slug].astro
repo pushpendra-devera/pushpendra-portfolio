@@ -3,6 +3,7 @@ import { getCollection, render } from "astro:content";
 import Header from "../../components/Header.astro";
 import Footer from "../../components/Footer.astro";
 import ThemeScript from "../../components/ThemeScript.astro";
+import BackgroundBlobs from "../../components/BackgroundBlobs.astro";
 import { siteConfig } from "../../config";
 import "../../styles/global.css";
 
@@ -58,6 +59,7 @@ const controlStatusLabel: Record<string, string> = {
     <meta name="twitter:image" content={new URL("og-image.png", Astro.site)} />
   </head>
   <body>
+    <BackgroundBlobs />
     <Header />
     <main class="max-w-3xl mx-auto px-6 pt-28 pb-16 sm:pt-32 sm:pb-24">
       <a
@@ -95,7 +97,7 @@ const controlStatusLabel: Record<string, string> = {
         d.stats && d.stats.length > 0 && (
           <div class="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4">
             {d.stats.map((stat) => (
-              <div class="rounded-xl border border-gray-200 dark:border-gray-700 p-4 text-center">
+              <div class="glass-card rounded-2xl p-4 text-center">
                 <div
                   class="text-2xl sm:text-3xl font-bold"
                   style="color: var(--site-accent)"
@@ -115,7 +117,7 @@ const controlStatusLabel: Record<string, string> = {
         d.stack && d.stack.length > 0 && (
           <div class="mt-8 flex flex-wrap gap-2">
             {d.stack.map((item) => (
-              <span class="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-full text-sm font-medium">
+              <span class="glass-pill px-3 py-1 text-gray-800 dark:text-gray-200 rounded-full text-sm font-medium">
                 {item}
               </span>
             ))}
@@ -176,9 +178,9 @@ const controlStatusLabel: Record<string, string> = {
             <h2 class="text-xl font-bold text-gray-900 dark:text-gray-50">
               Key engineering decisions
             </h2>
-            <div class="mt-4 space-y-6">
+            <div class="mt-4 space-y-4">
               {d.decisions.map((decision) => (
-                <div class="border-l-2 border-gray-200 dark:border-gray-700 pl-4">
+                <div class="glass-card rounded-2xl p-4 sm:p-5">
                   <h3 class="font-semibold text-gray-900 dark:text-gray-50">
                     {decision.decision}
                   </h3>
@@ -220,7 +222,7 @@ const controlStatusLabel: Record<string, string> = {
                     <span class="font-medium text-gray-900 dark:text-gray-50">
                       {control.name}
                     </span>
-                    <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
+                    <span class="glass-pill text-xs font-medium px-2 py-0.5 rounded-full text-gray-700 dark:text-gray-300">
                       {controlStatusLabel[control.status] ?? control.status}
                     </span>
                   </div>
@@ -249,7 +251,7 @@ const controlStatusLabel: Record<string, string> = {
                     <span class="font-medium text-gray-900 dark:text-gray-50">
                       {control.name}
                     </span>
-                    <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
+                    <span class="glass-pill text-xs font-medium px-2 py-0.5 rounded-full text-gray-700 dark:text-gray-300">
                       {controlStatusLabel[control.status] ?? control.status}
                     </span>
                   </div>

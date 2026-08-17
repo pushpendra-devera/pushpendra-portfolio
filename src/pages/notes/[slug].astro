@@ -1,0 +1,108 @@
+---
+import { getCollection, render } from "astro:content";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import ThemeScript from "../../components/ThemeScript.astro";
+import BackgroundBlobs from "../../components/BackgroundBlobs.astro";
+import { siteConfig } from "../../config";
+import "../../styles/global.css";
+
+export async function getStaticPaths() {
+  const entries = await getCollection(
+    "notes",
+    ({ data }) => data.visibility === "public" && data.status !== "draft",
+  );
+  return entries.map((entry) => ({
+    params: { slug: entry.data.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+
+const formattedDate = new Date(d.publishDate).toLocaleDateString("en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+---
+
+<html lang="en" style={`--site-accent: ${siteConfig.accentColor}`}>
+  <head>
+    <meta charset="utf-8" />
+    <ThemeScript />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={d.summary} />
+    {d.noindex && <meta name="robots" content="noindex" />}
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <title>{d.title} - {siteConfig.name}</title>
+
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content={new URL(Astro.url.pathname, Astro.site)} />
+    <meta property="og:title" content={`${d.title} - ${siteConfig.name}`} />
+    <meta property="og:description" content={d.summary} />
+    <meta property="og:site_name" content={siteConfig.name} />
+    <meta property="og:image" content={new URL("og-image.png", Astro.site)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={`${d.title} - ${siteConfig.name}`} />
+    <meta name="twitter:description" content={d.summary} />
+    <meta name="twitter:image" content={new URL("og-image.png", Astro.site)} />
+  </head>
+  <body>
+    <BackgroundBlobs />
+    <Header />
+    <main class="max-w-3xl mx-auto px-6 pt-28 pb-16 sm:pt-32 sm:pb-24">
+      <a
+        href="/notes"
+        class="text-sm text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white"
+        >&larr; All notes</a
+      >
+      <p
+        class="mt-4 text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wide"
+      >
+        {formattedDate}
+      </p>
+      <h1
+        class="mt-1 text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-50"
+      >
+        {d.title}
+      </h1>
+      <p class="mt-2 text-lg text-gray-600 dark:text-gray-400">{d.summary}</p>
+      {
+        d.tags && d.tags.length > 0 && (
+          <div class="mt-4 flex flex-wrap gap-2">
+            {d.tags.map((tag) => (
+              <span class="glass-pill px-2.5 py-1 rounded-full text-xs font-medium text-gray-700 dark:text-gray-300">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )
+      }
+
+      <div class="mt-8 glass-card rounded-2xl p-6 sm:p-8 prose-content">
+        <Content />
+      </div>
+
+      {
+        d.sourceProject && (
+          <p class="mt-6 text-sm text-gray-600 dark:text-gray-400">
+            Drawn from the{" "}
+            <a
+              href={`/projects/${d.sourceProject}`}
+              class="underline underline-offset-4 hover:text-black dark:hover:text-white"
+            >
+              full case study
+            </a>
+            .
+          </p>
+        )
+      }
+    </main>
+    <Footer />
+  </body>
+</html>

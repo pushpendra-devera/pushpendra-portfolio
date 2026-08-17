@@ -1,0 +1,73 @@
+---
+import { siteConfig } from "../config";
+
+const username = siteConfig.social?.github
+  ? siteConfig.social.github.replace(/\/$/, "").split("/").pop()
+  : null;
+---
+
+{
+  username && (
+    <section class="p-8 sm:p-12 md:p-16 lg:p-24">
+      <div>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
+          <div class="lg:col-span-4">
+            <h2 class="text-3xl sm:text-4xl md:text-5xl xl:text-7xl font-bold text-gray-900 dark:text-gray-50">
+              GitHub Activity
+            </h2>
+            <div
+              class="w-[75px] h-[5px] mt-2 rounded-full"
+              style="background-color: var(--site-accent)"
+            />
+          </div>
+
+          <div class="lg:col-span-8">
+            <div
+              class="glass-card rounded-2xl p-4 sm:p-6 overflow-x-auto"
+              tabindex="0"
+              role="region"
+              aria-label={`${username}'s GitHub contribution graph, scrollable`}
+            >
+              <div class="bg-white rounded-lg p-3 inline-block min-w-[663px]">
+                <img
+                  id="gh-chart"
+                  src={`https://ghchart.rshah.org/111827/${username}`}
+                  alt={`${username}'s GitHub contribution graph`}
+                  width="663"
+                  height="104"
+                  loading="lazy"
+                />
+              </div>
+              <p
+                id="gh-fallback"
+                class="hidden text-sm text-gray-600 dark:text-gray-400"
+              >
+                Live chart unavailable right now.
+              </p>
+            </div>
+            <a
+              href={siteConfig.social.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="mt-4 inline-block text-sm text-gray-600 dark:text-gray-400 underline underline-offset-4 hover:text-black dark:hover:text-white"
+            >
+              View full profile on GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<script is:inline>
+  (function () {
+    const img = document.getElementById("gh-chart");
+    const fallback = document.getElementById("gh-fallback");
+    if (!img || !fallback) return;
+    img.addEventListener("error", function () {
+      img.style.display = "none";
+      fallback.classList.remove("hidden");
+    });
+  })();
+</script>
