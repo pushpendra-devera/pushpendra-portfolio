@@ -1,10 +1,3 @@
-export interface Project {
-  name: string;
-  description: string;
-  link?: string;
-  skills?: string[];
-}
-
 export interface Experience {
   company: string;
   title: string;
@@ -28,12 +21,10 @@ export interface SiteConfig {
   social: {
     email: string;
     linkedin: string;
-    twitter: string;
     github: string;
   };
   aboutMe: string;
   skills: string[];
-  projects: Project[];
   experience: Experience[];
   education: Education[];
 }
@@ -49,7 +40,6 @@ export const siteConfig: SiteConfig = {
   social: {
     email: "pushpendra.devera@gmail.com",
     linkedin: "https://www.linkedin.com/in/pushpendra-singh-devera/",
-    twitter: "",
     github: "https://github.com/pushpendra-devera",
   },
   aboutMe:
@@ -72,7 +62,6 @@ export const siteConfig: SiteConfig = {
     "Android",
     "iOS",
   ],
-  projects: [],
   experience: [
     {
       company: "Cognith",

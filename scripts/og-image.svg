@@ -1,0 +1,18 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#ffffff" />
+
+  <!-- subtle corner mark, echoes the site favicon's </> motif -->
+  <g transform="translate(1080, 60)" opacity="0.12">
+    <polygon fill="#111827" points="0 30.1184211 0 22.9226974 16 14 16 21.5657895 6.00369686 26.3766447 6.00369686 26.6644737 16 31.4753289 16 39" />
+    <polygon fill="#111827" points="31 7 23.9756098 43 19 43 26.0243902 7" />
+    <polygon fill="#111827" points="50 30.1184211 34 39 34 31.4753289 44.025878 26.6644737 44.025878 26.3766447 34 21.5657895 34 14 50 22.9226974" />
+  </g>
+
+  <g transform="translate(100, 230)">
+    <text x="0" y="0" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="72" font-weight="700" fill="#111827">Pushpendra Singh</text>
+    <rect x="0" y="30" width="90" height="6" rx="3" fill="#111827" />
+    <text x="0" y="110" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="34" font-weight="500" fill="#4b5563">React Native Developer | Software Engineer</text>
+  </g>
+
+  <text x="100" y="560" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="22" fill="#9ca3af">pushpendra-portfolio-theta.vercel.app</text>
+</svg>

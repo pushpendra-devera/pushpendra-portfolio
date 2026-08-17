@@ -1,5 +1,51 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  color-scheme: light dark;
+  /* Hero background gradient fade-out stops (Hero.astro) */
+  --hero-fade-2: rgba(255, 255, 255, 0.3);
+  --hero-fade-3: rgba(255, 255, 255, 0.8);
+  --hero-fade-4: #ffffff;
+}
+
+.dark {
+  --hero-fade-2: rgba(17, 24, 39, 0.3);
+  --hero-fade-3: rgba(17, 24, 39, 0.8);
+  --hero-fade-4: #111827;
+}
+
+/* Overrides the per-page light-mode --site-accent (set inline from
+   siteConfig.accentColor) with a value that stays legible on a dark
+   background. !important is required here: it must beat the inline style
+   that sets the light-mode value on the same element. */
+.dark {
+  --site-accent: #e5e7eb !important;
+}
+
 body {
   font-family: "IBM Plex Mono", monospace;
+  background-color: #ffffff;
+}
+
+.dark body {
+  background-color: #111827;
+}
+
+/* Unstyled markup rendered from MDX case-study content (src/content/projects) */
+.prose-content h2 {
+  @apply text-xl font-bold text-gray-900 dark:text-gray-50 mt-8 mb-3;
+}
+
+.prose-content p {
+  @apply text-gray-600 dark:text-gray-400 leading-relaxed mb-4;
+}
+
+.prose-content em {
+  @apply text-gray-500 dark:text-gray-400;
+}
+
+.prose-content hr {
+  @apply border-gray-200 dark:border-gray-700 my-8;
 }

@@ -1,0 +1,21 @@
+---
+// Must run synchronously, before first paint, to avoid a flash of the
+// wrong theme. Reads a saved preference from localStorage, falling back to
+// the OS-level prefers-color-scheme.
+---
+
+<script is:inline>
+  (function () {
+    let stored = null;
+    try {
+      stored = localStorage.getItem("theme");
+    } catch {
+      // localStorage unavailable (private browsing, etc.) - fall through
+    }
+    const isDark =
+      stored === "dark" ||
+      (stored !== "light" &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches);
+    document.documentElement.classList.toggle("dark", isDark);
+  })();
+</script>

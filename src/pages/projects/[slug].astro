@@ -2,6 +2,7 @@
 import { getCollection, render } from "astro:content";
 import Header from "../../components/Header.astro";
 import Footer from "../../components/Footer.astro";
+import ThemeScript from "../../components/ThemeScript.astro";
 import { siteConfig } from "../../config";
 import "../../styles/global.css";
 
@@ -33,9 +34,10 @@ const controlStatusLabel: Record<string, string> = {
 };
 ---
 
-<html lang="en">
+<html lang="en" style={`--site-accent: ${siteConfig.accentColor}`}>
   <head>
     <meta charset="utf-8" />
+    <ThemeScript />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
@@ -49,23 +51,31 @@ const controlStatusLabel: Record<string, string> = {
     <meta property="og:title" content={`${d.title} - ${siteConfig.name}`} />
     <meta property="og:description" content={d.summary} />
     <meta property="og:site_name" content={siteConfig.name} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={new URL("og-image.png", Astro.site)} />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={`${d.title} - ${siteConfig.name}`} />
     <meta name="twitter:description" content={d.summary} />
+    <meta name="twitter:image" content={new URL("og-image.png", Astro.site)} />
   </head>
   <body>
     <Header />
     <main class="max-w-3xl mx-auto px-6 pt-28 pb-16 sm:pt-32 sm:pb-24">
-      <a href="/projects" class="text-sm text-gray-600 hover:text-black"
+      <a
+        href="/projects"
+        class="text-sm text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white"
         >&larr; All projects</a
       >
-      <h1 class="mt-4 text-3xl sm:text-4xl font-bold text-gray-900">
+      <h1
+        class="mt-4 text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-50"
+      >
         {d.title}
       </h1>
-      <p class="mt-2 text-lg text-gray-600">{d.summary}</p>
+      <p class="mt-2 text-lg text-gray-600 dark:text-gray-400">{d.summary}</p>
       {
         metaRow.length > 0 && (
-          <p class="mt-3 text-sm text-gray-500">{metaRow.join(" · ")}</p>
+          <p class="mt-3 text-sm text-gray-500 dark:text-gray-400">
+            {metaRow.join(" · ")}
+          </p>
         )
       }
       {
@@ -74,7 +84,7 @@ const controlStatusLabel: Record<string, string> = {
             href={d.repositoryUrl}
             target="_blank"
             rel="noopener noreferrer"
-            class="mt-2 inline-block text-sm underline underline-offset-4 text-gray-600 hover:text-black"
+            class="mt-2 inline-block text-sm underline underline-offset-4 text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white"
           >
             View repository
           </a>
@@ -85,14 +95,14 @@ const controlStatusLabel: Record<string, string> = {
         d.stats && d.stats.length > 0 && (
           <div class="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4">
             {d.stats.map((stat) => (
-              <div class="rounded-xl border border-gray-200 p-4 text-center">
+              <div class="rounded-xl border border-gray-200 dark:border-gray-700 p-4 text-center">
                 <div
                   class="text-2xl sm:text-3xl font-bold"
-                  style={`color: ${siteConfig.accentColor}`}
+                  style="color: var(--site-accent)"
                 >
                   {stat.value}
                 </div>
-                <div class="mt-1 text-xs sm:text-sm text-gray-600">
+                <div class="mt-1 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                   {stat.label}
                 </div>
               </div>
@@ -105,7 +115,7 @@ const controlStatusLabel: Record<string, string> = {
         d.stack && d.stack.length > 0 && (
           <div class="mt-8 flex flex-wrap gap-2">
             {d.stack.map((item) => (
-              <span class="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm font-medium">
+              <span class="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-full text-sm font-medium">
                 {item}
               </span>
             ))}
@@ -120,8 +130,10 @@ const controlStatusLabel: Record<string, string> = {
       {
         d.workflow && d.workflow.length > 0 && (
           <section class="mt-10">
-            <h2 class="text-xl font-bold text-gray-900">Workflow</h2>
-            <ol class="mt-3 space-y-1 list-decimal list-inside text-gray-600">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-gray-50">
+              Workflow
+            </h2>
+            <ol class="mt-3 space-y-1 list-decimal list-inside text-gray-600 dark:text-gray-400">
               {d.workflow.map((item) => (
                 <li>{item}</li>
               ))}
@@ -133,8 +145,10 @@ const controlStatusLabel: Record<string, string> = {
       {
         d.constraints && d.constraints.length > 0 && (
           <section class="mt-10">
-            <h2 class="text-xl font-bold text-gray-900">Constraints</h2>
-            <ul class="mt-3 space-y-1 list-disc list-inside text-gray-600">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-gray-50">
+              Constraints
+            </h2>
+            <ul class="mt-3 space-y-1 list-disc list-inside text-gray-600 dark:text-gray-400">
               {d.constraints.map((item) => (
                 <li>{item}</li>
               ))}
@@ -146,8 +160,12 @@ const controlStatusLabel: Record<string, string> = {
       {
         d.architecture && (
           <section class="mt-10">
-            <h2 class="text-xl font-bold text-gray-900">Architecture</h2>
-            <p class="mt-3 text-gray-600 leading-relaxed">{d.architecture}</p>
+            <h2 class="text-xl font-bold text-gray-900 dark:text-gray-50">
+              Architecture
+            </h2>
+            <p class="mt-3 text-gray-600 dark:text-gray-400 leading-relaxed">
+              {d.architecture}
+            </p>
           </section>
         )
       }
@@ -155,29 +173,29 @@ const controlStatusLabel: Record<string, string> = {
       {
         d.decisions && d.decisions.length > 0 && (
           <section class="mt-10">
-            <h2 class="text-xl font-bold text-gray-900">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-gray-50">
               Key engineering decisions
             </h2>
             <div class="mt-4 space-y-6">
               {d.decisions.map((decision) => (
-                <div class="border-l-2 border-gray-200 pl-4">
-                  <h3 class="font-semibold text-gray-900">
+                <div class="border-l-2 border-gray-200 dark:border-gray-700 pl-4">
+                  <h3 class="font-semibold text-gray-900 dark:text-gray-50">
                     {decision.decision}
                   </h3>
                   {decision.problem && (
-                    <p class="mt-1 text-sm text-gray-600">
+                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
                       <span class="font-medium">Problem:</span>{" "}
                       {decision.problem}
                     </p>
                   )}
                   {decision.chosenApproach && (
-                    <p class="mt-1 text-sm text-gray-600">
+                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
                       <span class="font-medium">Approach:</span>{" "}
                       {decision.chosenApproach}
                     </p>
                   )}
                   {decision.evidence && (
-                    <p class="mt-1 text-sm text-gray-600">
+                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
                       <span class="font-medium">Evidence:</span>{" "}
                       {decision.evidence}
                     </p>
@@ -192,20 +210,24 @@ const controlStatusLabel: Record<string, string> = {
       {
         d.safetyControls && d.safetyControls.length > 0 && (
           <section class="mt-10">
-            <h2 class="text-xl font-bold text-gray-900">Safety controls</h2>
+            <h2 class="text-xl font-bold text-gray-900 dark:text-gray-50">
+              Safety controls
+            </h2>
             <ul class="mt-4 space-y-3">
               {d.safetyControls.map((control) => (
                 <li>
                   <div class="flex flex-wrap items-baseline gap-2">
-                    <span class="font-medium text-gray-900">
+                    <span class="font-medium text-gray-900 dark:text-gray-50">
                       {control.name}
                     </span>
-                    <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-700">
+                    <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
                       {controlStatusLabel[control.status] ?? control.status}
                     </span>
                   </div>
                   {control.detail && (
-                    <p class="mt-1 text-sm text-gray-600">{control.detail}</p>
+                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                      {control.detail}
+                    </p>
                   )}
                 </li>
               ))}
@@ -217,20 +239,24 @@ const controlStatusLabel: Record<string, string> = {
       {
         d.privacyControls && d.privacyControls.length > 0 && (
           <section class="mt-10">
-            <h2 class="text-xl font-bold text-gray-900">Privacy controls</h2>
+            <h2 class="text-xl font-bold text-gray-900 dark:text-gray-50">
+              Privacy controls
+            </h2>
             <ul class="mt-4 space-y-3">
               {d.privacyControls.map((control) => (
                 <li>
                   <div class="flex flex-wrap items-baseline gap-2">
-                    <span class="font-medium text-gray-900">
+                    <span class="font-medium text-gray-900 dark:text-gray-50">
                       {control.name}
                     </span>
-                    <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-700">
+                    <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
                       {controlStatusLabel[control.status] ?? control.status}
                     </span>
                   </div>
                   {control.detail && (
-                    <p class="mt-1 text-sm text-gray-600">{control.detail}</p>
+                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                      {control.detail}
+                    </p>
                   )}
                 </li>
               ))}
@@ -242,10 +268,10 @@ const controlStatusLabel: Record<string, string> = {
       {
         d.performance && d.performance.length > 0 && (
           <section class="mt-10">
-            <h2 class="text-xl font-bold text-gray-900">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-gray-50">
               Performance &amp; stability
             </h2>
-            <ul class="mt-3 space-y-1 list-disc list-inside text-gray-600">
+            <ul class="mt-3 space-y-1 list-disc list-inside text-gray-600 dark:text-gray-400">
               {d.performance.map((item) => (
                 <li>{item}</li>
               ))}
@@ -257,8 +283,10 @@ const controlStatusLabel: Record<string, string> = {
       {
         d.testing && d.testing.length > 0 && (
           <section class="mt-10">
-            <h2 class="text-xl font-bold text-gray-900">Testing</h2>
-            <ul class="mt-3 space-y-1 list-disc list-inside text-gray-600">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-gray-50">
+              Testing
+            </h2>
+            <ul class="mt-3 space-y-1 list-disc list-inside text-gray-600 dark:text-gray-400">
               {d.testing.map((item) => (
                 <li>{item}</li>
               ))}
@@ -270,8 +298,10 @@ const controlStatusLabel: Record<string, string> = {
       {
         d.releaseEngineering && (
           <section class="mt-10">
-            <h2 class="text-xl font-bold text-gray-900">Release engineering</h2>
-            <p class="mt-3 text-gray-600 leading-relaxed">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-gray-50">
+              Release engineering
+            </h2>
+            <p class="mt-3 text-gray-600 dark:text-gray-400 leading-relaxed">
               {d.releaseEngineering}
             </p>
           </section>
@@ -281,8 +311,10 @@ const controlStatusLabel: Record<string, string> = {
       {
         d.outcomes && d.outcomes.length > 0 && (
           <section class="mt-10">
-            <h2 class="text-xl font-bold text-gray-900">Verified outcomes</h2>
-            <ul class="mt-3 space-y-1 list-disc list-inside text-gray-600">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-gray-50">
+              Verified outcomes
+            </h2>
+            <ul class="mt-3 space-y-1 list-disc list-inside text-gray-600 dark:text-gray-400">
               {d.outcomes.map((item) => (
                 <li>{item}</li>
               ))}
@@ -294,10 +326,10 @@ const controlStatusLabel: Record<string, string> = {
       {
         d.limitations && d.limitations.length > 0 && (
           <section class="mt-10">
-            <h2 class="text-xl font-bold text-gray-900">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-gray-50">
               Limitations &amp; remaining risks
             </h2>
-            <ul class="mt-3 space-y-1 list-disc list-inside text-gray-600">
+            <ul class="mt-3 space-y-1 list-disc list-inside text-gray-600 dark:text-gray-400">
               {d.limitations.map((item) => (
                 <li>{item}</li>
               ))}
@@ -309,8 +341,10 @@ const controlStatusLabel: Record<string, string> = {
       {
         d.lessons && d.lessons.length > 0 && (
           <section class="mt-10">
-            <h2 class="text-xl font-bold text-gray-900">What I learned</h2>
-            <ul class="mt-3 space-y-1 list-disc list-inside text-gray-600">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-gray-50">
+              What I learned
+            </h2>
+            <ul class="mt-3 space-y-1 list-disc list-inside text-gray-600 dark:text-gray-400">
               {d.lessons.map((item) => (
                 <li>{item}</li>
               ))}

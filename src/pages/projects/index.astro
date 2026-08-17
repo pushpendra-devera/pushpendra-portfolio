@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import Header from "../../components/Header.astro";
 import Footer from "../../components/Footer.astro";
+import ThemeScript from "../../components/ThemeScript.astro";
 import { siteConfig } from "../../config";
 import "../../styles/global.css";
 
@@ -11,9 +12,10 @@ const entries = await getCollection(
 );
 ---
 
-<html lang="en">
+<html lang="en" style={`--site-accent: ${siteConfig.accentColor}`}>
   <head>
     <meta charset="utf-8" />
+    <ThemeScript />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
@@ -35,20 +37,28 @@ const entries = await getCollection(
       content={`Case studies by ${siteConfig.name}`}
     />
     <meta property="og:site_name" content={siteConfig.name} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={new URL("og-image.png", Astro.site)} />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={`Projects - ${siteConfig.name}`} />
     <meta
       name="twitter:description"
       content={`Case studies by ${siteConfig.name}`}
     />
+    <meta name="twitter:image" content={new URL("og-image.png", Astro.site)} />
   </head>
   <body>
     <Header />
     <main class="max-w-3xl mx-auto px-6 pt-28 pb-16 sm:pt-32 sm:pb-24">
-      <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">Projects</h1>
+      <h1
+        class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-50"
+      >
+        Projects
+      </h1>
       {
         entries.length === 0 && (
-          <p class="mt-6 text-gray-600">No case studies published yet.</p>
+          <p class="mt-6 text-gray-600 dark:text-gray-400">
+            No case studies published yet.
+          </p>
         )
       }
       <ul class="mt-8 space-y-8">
@@ -56,10 +66,12 @@ const entries = await getCollection(
           entries.map((entry) => (
             <li>
               <a href={`/projects/${entry.data.slug}`} class="group block">
-                <h2 class="text-xl font-semibold text-gray-900 group-hover:underline">
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-50 group-hover:underline">
                   {entry.data.title}
                 </h2>
-                <p class="mt-1 text-gray-600">{entry.data.summary}</p>
+                <p class="mt-1 text-gray-600 dark:text-gray-400">
+                  {entry.data.summary}
+                </p>
               </a>
             </li>
           ))
