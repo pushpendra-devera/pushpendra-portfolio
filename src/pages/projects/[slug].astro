@@ -96,7 +96,7 @@ const repositoryVisibilityLabel: Record<string, string> = {
         </span>
         {
           d.repositoryVisibility && (
-            <span class="text-xs font-medium text-gray-500 dark:text-gray-400">
+            <span class="text-xs font-medium text-gray-700 dark:text-gray-300">
               {repositoryVisibilityLabel[d.repositoryVisibility] ??
                 d.repositoryVisibility}
             </span>
@@ -105,7 +105,7 @@ const repositoryVisibilityLabel: Record<string, string> = {
       </div>
       {
         metaRow.length > 0 && (
-          <p class="mt-3 text-sm text-gray-500 dark:text-gray-400">
+          <p class="mt-3 text-sm text-gray-700 dark:text-gray-300">
             {metaRow.join(" · ")}
           </p>
         )
