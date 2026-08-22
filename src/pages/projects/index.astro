@@ -11,6 +11,35 @@ const entries = await getCollection(
   "projects",
   ({ data }) => data.visibility === "public" && data.status !== "draft",
 );
+
+const byDisplayOrder = (
+  a: (typeof entries)[number],
+  b: (typeof entries)[number],
+) =>
+  a.data.displayOrder - b.data.displayOrder ||
+  a.data.title.localeCompare(b.data.title);
+
+const featuredEntries = entries
+  .filter(({ data }) => data.featured)
+  .sort(byDisplayOrder);
+const supportingEntries = entries
+  .filter(({ data }) => !data.featured)
+  .sort(byDisplayOrder);
+
+const statusLabel: Record<string, string> = {
+  active: "In production",
+  beta: "Beta",
+  completed: "Completed",
+  paused: "Paused",
+  prototype: "Prototype",
+};
+
+const sourceLabel: Record<string, string> = {
+  public: "Public source",
+  private: "Private source",
+  mixed: "Mixed visibility",
+  none: "Source unavailable",
+};
 ---
 
 <html lang="en" style={`--site-accent: ${siteConfig.accentColor}`}>
@@ -20,14 +49,11 @@ const entries = await getCollection(
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="description" content={`Case studies by ${siteConfig.name}`} />
-    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
-    <link
-      rel="alternate"
-      type="application/rss+xml"
-      title={`${siteConfig.name} - Writing`}
-      href={new URL("rss.xml", Astro.site)}
+    <meta
+      name="description"
+      content={`Production work, independent products, and source-reviewed prototypes by ${siteConfig.name}.`}
     />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
     <title>Projects - {siteConfig.name}</title>
 
     <meta property="og:type" content="website" />
@@ -35,7 +61,7 @@ const entries = await getCollection(
     <meta property="og:title" content={`Projects - ${siteConfig.name}`} />
     <meta
       property="og:description"
-      content={`Case studies by ${siteConfig.name}`}
+      content="Production mobile work, independent products, and source-reviewed prototypes."
     />
     <meta property="og:site_name" content={siteConfig.name} />
     <meta property="og:image" content={new URL("og-image.png", Astro.site)} />
@@ -43,45 +69,143 @@ const entries = await getCollection(
     <meta name="twitter:title" content={`Projects - ${siteConfig.name}`} />
     <meta
       name="twitter:description"
-      content={`Case studies by ${siteConfig.name}`}
+      content="Production mobile work, independent products, and source-reviewed prototypes."
     />
     <meta name="twitter:image" content={new URL("og-image.png", Astro.site)} />
   </head>
   <body>
     <BackgroundBlobs />
     <Header />
-    <main class="max-w-3xl mx-auto px-6 pt-28 pb-16 sm:pt-32 sm:pb-24">
-      <h1
-        class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-50"
-      >
-        Projects
-      </h1>
+    <main class="max-w-5xl mx-auto px-6 pt-28 pb-16 sm:pt-32 sm:pb-24">
+      <div class="max-w-3xl">
+        <p
+          class="text-sm font-semibold uppercase tracking-[0.18em] text-gray-600 dark:text-gray-400"
+        >
+          Selected engineering work
+        </p>
+        <h1
+          class="mt-3 text-4xl sm:text-5xl font-bold tracking-tight text-gray-900 dark:text-gray-50"
+        >
+          Projects with the tradeoffs left in.
+        </h1>
+        <p
+          class="mt-5 text-lg leading-relaxed text-gray-600 dark:text-gray-400"
+        >
+          Production mobile work, independently shipped products, and focused
+          prototypes—documented from the code itself. Private repositories are
+          still described with concrete architecture, decisions, evidence, and
+          limitations.
+        </p>
+      </div>
+
+      <section class="mt-14" aria-labelledby="featured-projects-heading">
+        <div class="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2
+              id="featured-projects-heading"
+              class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-50"
+            >
+              Featured case studies
+            </h2>
+            <p class="mt-2 text-gray-600 dark:text-gray-400">
+              The strongest evidence for production and systems work.
+            </p>
+          </div>
+          <span class="text-sm text-gray-700 dark:text-gray-300">
+            {featuredEntries.length} in depth
+          </span>
+        </div>
+
+        <ul class="mt-7 grid gap-5 md:grid-cols-2">
+          {
+            featuredEntries.map((entry) => (
+              <li class="h-full">
+                <a
+                  href={`/projects/${entry.data.slug}`}
+                  class="group glass-card rounded-2xl p-6 h-full flex flex-col transition-transform duration-300 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gray-900 dark:focus-visible:outline-gray-100"
+                >
+                  <div class="flex flex-wrap items-center gap-2 text-xs font-medium text-gray-600 dark:text-gray-400">
+                    <span class="glass-pill rounded-full px-2.5 py-1">
+                      {statusLabel[entry.data.status] ?? entry.data.status}
+                    </span>
+                    {entry.data.repositoryVisibility && (
+                      <span>
+                        {sourceLabel[entry.data.repositoryVisibility] ??
+                          entry.data.repositoryVisibility}
+                      </span>
+                    )}
+                  </div>
+                  <h3 class="mt-5 text-xl font-semibold text-gray-900 dark:text-gray-50 group-hover:underline underline-offset-4">
+                    {entry.data.title}
+                  </h3>
+                  <p class="mt-3 flex-1 leading-relaxed text-gray-600 dark:text-gray-400">
+                    {entry.data.summary}
+                  </p>
+                  {entry.data.stack && (
+                    <ul
+                      class="mt-5 flex flex-wrap gap-2"
+                      aria-label="Technology stack"
+                    >
+                      {entry.data.stack.slice(0, 4).map((item) => (
+                        <li class="text-xs text-gray-600 dark:text-gray-400">
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  <span class="mt-5 text-sm font-semibold text-gray-900 dark:text-gray-100">
+                    Read case study <span aria-hidden="true">→</span>
+                  </span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
       {
-        entries.length === 0 && (
-          <p class="mt-6 text-gray-600 dark:text-gray-400">
-            No case studies published yet.
-          </p>
+        supportingEntries.length > 0 && (
+          <section class="mt-16" aria-labelledby="supporting-projects-heading">
+            <h2
+              id="supporting-projects-heading"
+              class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-50"
+            >
+              Supporting builds
+            </h2>
+            <p class="mt-2 max-w-2xl text-gray-600 dark:text-gray-400">
+              Focused prototypes and earlier mobile work, kept accurate about
+              what is implemented and what remains unfinished.
+            </p>
+            <ul class="mt-7 space-y-4">
+              {supportingEntries.map((entry) => (
+                <li>
+                  <a
+                    href={`/projects/${entry.data.slug}`}
+                    class="group glass-card rounded-2xl p-5 sm:p-6 grid gap-4 sm:grid-cols-[1fr_auto] sm:items-center transition-transform duration-300 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gray-900 dark:focus-visible:outline-gray-100"
+                  >
+                    <div>
+                      <div class="flex flex-wrap items-center gap-2">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-50 group-hover:underline underline-offset-4">
+                          {entry.data.title}
+                        </h3>
+                        <span class="glass-pill rounded-full px-2.5 py-1 text-xs text-gray-600 dark:text-gray-400">
+                          {statusLabel[entry.data.status] ?? entry.data.status}
+                        </span>
+                      </div>
+                      <p class="mt-2 leading-relaxed text-gray-600 dark:text-gray-400">
+                        {entry.data.summary}
+                      </p>
+                    </div>
+                    <span class="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                      View details <span aria-hidden="true">→</span>
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
         )
       }
-      <ul class="mt-8 space-y-6">
-        {
-          entries.map((entry) => (
-            <li>
-              <a
-                href={`/projects/${entry.data.slug}`}
-                class="group block glass-card rounded-2xl p-5 sm:p-6 transition-transform duration-300 hover:-translate-y-1"
-              >
-                <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-50 group-hover:underline">
-                  {entry.data.title}
-                </h2>
-                <p class="mt-1 text-gray-600 dark:text-gray-400">
-                  {entry.data.summary}
-                </p>
-              </a>
-            </li>
-          ))
-        }
-      </ul>
     </main>
     <Footer />
   </body>

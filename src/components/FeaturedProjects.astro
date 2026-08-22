@@ -1,0 +1,77 @@
+---
+import { getCollection } from "astro:content";
+
+const projects = (
+  await getCollection(
+    "projects",
+    ({ data }) =>
+      data.visibility === "public" && data.status !== "draft" && data.featured,
+  )
+)
+  .sort(
+    (a, b) =>
+      a.data.displayOrder - b.data.displayOrder ||
+      a.data.title.localeCompare(b.data.title),
+  )
+  .slice(0, 4);
+---
+
+<section id="projects" class="p-8 sm:p-12 md:p-16 lg:p-24">
+  <div class="max-w-6xl mx-auto">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
+      <div class="lg:col-span-4">
+        <p
+          class="text-sm font-semibold uppercase tracking-[0.18em] text-gray-600 dark:text-gray-400"
+        >
+          Proof of work
+        </p>
+        <h2
+          class="mt-3 text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-bold text-gray-900 dark:text-gray-50"
+        >
+          Selected Projects
+        </h2>
+        <div
+          class="w-[75px] h-[5px] mt-3 rounded-full"
+          style="background-color: var(--site-accent)"
+        >
+        </div>
+        <p class="mt-5 leading-relaxed text-gray-600 dark:text-gray-400">
+          Production apps, independent products, and source-reviewed case
+          studies with concrete decisions and honest limitations.
+        </p>
+        <a
+          href="/projects"
+          class="mt-6 inline-flex items-center gap-2 font-semibold text-gray-900 dark:text-gray-100 underline underline-offset-4"
+        >
+          See all project work <span aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <ul class="lg:col-span-8 grid gap-4 sm:grid-cols-2">
+        {
+          projects.map((project) => (
+            <li class="h-full">
+              <a
+                href={`/projects/${project.data.slug}`}
+                class="group glass-card rounded-2xl p-5 sm:p-6 h-full flex flex-col transition-transform duration-300 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gray-900 dark:focus-visible:outline-gray-100"
+              >
+                <p class="text-xs font-medium uppercase tracking-wide text-gray-700 dark:text-gray-300">
+                  {project.data.projectType}
+                </p>
+                <h3 class="mt-3 text-xl font-semibold text-gray-900 dark:text-gray-50 group-hover:underline underline-offset-4">
+                  {project.data.title}
+                </h3>
+                <p class="mt-3 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                  {project.data.summary}
+                </p>
+                <span class="mt-5 text-sm font-semibold text-gray-900 dark:text-gray-100">
+                  Read case study <span aria-hidden="true">→</span>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>

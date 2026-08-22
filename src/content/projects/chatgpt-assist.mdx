@@ -1,0 +1,80 @@
+---
+title: "ChatGPT Assist"
+slug: "chatgpt-assist"
+summary: "A React Native and Expo assistant that combines conversational AI, DALL·E 3 image generation, and Whisper speech-to-text in one drawer-navigated mobile app."
+status: "prototype"
+visibility: "public"
+noindex: false
+featured: true
+displayOrder: 4
+projectType: "Multimodal mobile prototype (React Native + Expo)"
+role: "Sole developer"
+teamSize: "Solo"
+repositoryUrl: "https://github.com/pushpendra-devera/ChatGPT-assist"
+repositoryVisibility: "public"
+constraints:
+  - "Bring three different AI workflows into one mobile interaction model"
+  - "Record and upload audio from the device for transcription"
+  - "Let the user supply and persist their own OpenAI API key"
+stats:
+  - label: "AI workflows"
+    value: "3"
+  - label: "Primary screens"
+    value: "4"
+  - label: "Source commits"
+    value: "15"
+stack:
+  - "React Native"
+  - "Expo"
+  - "TypeScript"
+  - "OpenAI SDK"
+  - "DALL·E 3"
+  - "Whisper"
+  - "expo-av"
+  - "React Navigation"
+  - "AsyncStorage"
+architecture: "A drawer navigator separates Chat, Image, Whisper, and Settings screens. Shared API-key context loads the user's key from AsyncStorage, while a reusable API hook owns chat completion, image-generation, and audio-transcription requests. The chat flow retains message history in screen state; generated images are rendered inline with assistant messages, and the Whisper screen records audio locally before uploading it for transcription."
+workflow:
+  - "Enter an API key in Settings and persist it on the device."
+  - "Use Chat for a running text conversation."
+  - "Describe an image and render the generated result in the app."
+  - "Record speech on-device, upload it to Whisper, and place the transcript into the chat flow."
+decisions:
+  - decision: "One app, separate task-focused screens"
+    problem: "Chat, image generation, and voice transcription have different inputs and output states"
+    chosenApproach: "Use drawer navigation to keep each workflow focused while sharing credential state and API helpers"
+  - decision: "Keep an honest prototype boundary"
+    problem: "The app demonstrates direct integrations but does not have a production credential service"
+    chosenApproach: "Present it as a prototype and document client-side key storage as a limitation instead of implying production-grade secret handling"
+outcomes:
+  - "Integrated text, image, and speech AI capabilities in a single React Native application"
+  - "Built a complete device-audio path from recording through multipart upload to transcription"
+  - "Evolved the app through 15 source commits rather than a one-file proof of concept"
+evidence:
+  - "Source reviewed directly at the current main branch; feature claims are based on implemented screens and API calls"
+limitations:
+  - "The API key is stored in plain AsyncStorage and requests are made directly from the client; a production version should use a server-minted token or backend proxy plus OS-backed secure storage"
+  - "Text-to-speech is not implemented, despite appearing in an earlier README feature list"
+  - "The project is a portfolio prototype, not a released production application"
+lessons:
+  - "A shared provider context keeps multimodal workflows consistent, but mobile AI products still need a deliberate credential boundary before release"
+---
+
+## Overview
+
+I built ChatGPT Assist to explore how several generative-AI interactions feel
+inside one mobile product rather than as isolated API demos. The result is a
+drawer-navigated React Native app with three working paths: a conversation with
+message history, DALL·E 3 image generation, and device audio recording followed
+by Whisper transcription.
+
+## What this demonstrates
+
+The useful part of this project is the mobile integration work around the model
+calls: recording and uploading device audio, coordinating asynchronous loading
+and error states, sharing a user-provided credential across screens, and
+rendering different output types inside a consistent navigation structure.
+
+The source is public, and the limitations below are intentional disclosure. I
+would move all provider access behind a backend boundary before treating this
+as a production architecture.

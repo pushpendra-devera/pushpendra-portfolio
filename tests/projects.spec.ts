@@ -9,6 +9,23 @@ const pages = [
   },
   { path: "/projects/ai-job-agent", name: "projects-ai-job-agent" },
   { path: "/projects/rm-fitness-club", name: "projects-rm-fitness-club" },
+  { path: "/projects/chatgpt-assist", name: "projects-chatgpt-assist" },
+  {
+    path: "/projects/realtime-voice-agent",
+    name: "projects-realtime-voice-agent",
+  },
+  {
+    path: "/projects/react-native-product-experiments",
+    name: "projects-react-native-product-experiments",
+  },
+  {
+    path: "/projects/college-management-portal",
+    name: "projects-college-management-portal",
+  },
+  {
+    path: "/projects/webgl-theme-experiment",
+    name: "projects-webgl-theme-experiment",
+  },
 ];
 
 for (const { path, name } of pages) {

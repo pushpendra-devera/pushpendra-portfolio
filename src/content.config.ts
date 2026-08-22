@@ -38,13 +38,17 @@ const projects = defineCollection({
     ]),
     visibility: z.enum(["public", "private"]),
     noindex: z.boolean().default(false),
+    featured: z.boolean().default(false),
+    displayOrder: z.number().int().nonnegative().default(999),
     projectType: z.string().optional(),
     role: z.string().optional(),
     teamSize: z.string().optional(),
     startDate: z.string().optional(),
     endDate: z.string().optional(),
     repositoryUrl: z.string().optional(),
-    repositoryVisibility: z.enum(["public", "private", "none"]).optional(),
+    repositoryVisibility: z
+      .enum(["public", "private", "mixed", "none"])
+      .optional(),
     problem: z.string().optional(),
     constraints: z.array(z.string()).optional(),
     responsibilities: z.array(z.string()).optional(),

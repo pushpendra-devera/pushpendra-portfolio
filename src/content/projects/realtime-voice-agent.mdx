@@ -1,0 +1,77 @@
+---
+title: "Bilingual Realtime Voice Agent"
+slug: "realtime-voice-agent"
+summary: "A Hindi/English voice-agent prototype with a React Native client, an Express token service, WebRTC push-to-talk, language selection, and a separate streamed speech fallback pipeline."
+status: "prototype"
+visibility: "public"
+noindex: false
+featured: false
+displayOrder: 5
+projectType: "Voice AI prototype (React Native + Node.js monorepo)"
+role: "Sole developer"
+teamSize: "Solo"
+repositoryVisibility: "private"
+constraints:
+  - "Keep the long-lived OpenAI API key off the mobile client"
+  - "Support Hindi, English, and automatic language selection"
+  - "Allow the user to interrupt assistant playback while speaking"
+  - "Provide a non-WebRTC transport path for constrained environments"
+stats:
+  - label: "Applications"
+    value: "2"
+  - label: "Languages"
+    value: "2"
+  - label: "Voice paths"
+    value: "2"
+stack:
+  - "React Native"
+  - "TypeScript"
+  - "Node.js"
+  - "Express"
+  - "WebRTC"
+  - "OpenAI Realtime API"
+  - "Server-Sent Events"
+  - "pnpm workspaces"
+  - "Vitest"
+architecture: "A pnpm monorepo separates the React Native client, Express server, and shared language/types package. The server mints short-lived Realtime session credentials so the long-lived provider key remains server-side. The primary mobile path opens a WebRTC session; a separate HTTP/SSE pipeline implements transcription, chat completion, and streamed speech generation as a fallback."
+workflow:
+  - "Choose Auto, Hindi, or English and request a short-lived session token from the server."
+  - "Connect the mobile client to a Realtime WebRTC session."
+  - "Hold to talk; assistant audio is muted while the microphone is active, enabling interruption."
+  - "When WebRTC is unavailable, the server-side fallback can transcribe audio, generate a response, and stream speech events over SSE."
+decisions:
+  - decision: "Mint ephemeral credentials on the server"
+    problem: "Embedding a long-lived provider key in a mobile bundle would expose it"
+    chosenApproach: "Use an Express endpoint to create a short-lived Realtime session credential for the client"
+  - decision: "Separate realtime and fallback transports"
+    problem: "WebRTC is not viable in every runtime or network condition"
+    chosenApproach: "Keep a second speech-to-text → response → text-to-speech path behind HTTP and SSE"
+outcomes:
+  - "Established a monorepo boundary between mobile UI, server-owned credentials, and shared language logic"
+  - "Implemented push-to-talk interruption behavior around the Realtime audio tracks"
+  - "Added health and latency endpoints plus unit tests for language inference and server health"
+evidence:
+  - "Source reviewed directly at the current master branch; the repository is private"
+limitations:
+  - "The two-commit prototype was not validated end-to-end in its committed form"
+  - "The SSE fallback exists as a client/server implementation but is not wired into the main screen's failed-connect flow"
+  - "The shared redact helper only trims whitespace; it is not meaningful PII redaction"
+lessons:
+  - "Voice-agent reliability depends as much on transport and credential boundaries as on the model response itself"
+---
+
+## Overview
+
+This prototype explores a mobile voice agent that can switch between Hindi and
+English and keep conversational latency low through OpenAI's Realtime API. The
+React Native client owns the push-to-talk experience, while the Express server
+keeps the long-lived provider key out of the app and returns only short-lived
+session credentials.
+
+## Prototype scope
+
+The architecture has two voice paths: WebRTC for realtime conversation and an
+HTTP/SSE pipeline that composes transcription, response generation, and speech.
+The latter is implemented but is not yet connected to the main UI's failure
+path, so this page deliberately describes the project as a prototype rather
+than a finished voice product.
