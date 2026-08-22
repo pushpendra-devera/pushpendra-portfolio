@@ -1,0 +1,123 @@
+---
+title: "FashionAggregator"
+slug: "fashion-aggregator"
+summary: "A private React Native fashion marketplace with distinct Buyer, Seller, Stylist, and Delivery Partner experiences across discovery, commerce, collaboration, fulfilment, and analytics."
+status: "completed"
+visibility: "public"
+noindex: false
+featured: true
+displayOrder: 4
+projectType: "Multi-role fashion marketplace (React Native)"
+role: "React Native developer and project repository owner"
+repositoryVisibility: "private"
+constraints:
+  - "Keep four marketplace roles inside one mobile codebase while giving each role a focused navigation model"
+  - "Support English and Arabic layouts, including RTL-aware spacing, alignment, icons, and row direction"
+  - "Coordinate marketplace, styling, payment, inventory, fulfilment, and communication flows through a shared modular framework"
+  - "Document an archived private project without claiming that its retired backend is live today"
+stats:
+  - label: "Role experiences"
+    value: "4"
+  - label: "Registered screens"
+    value: "288"
+  - label: "Languages"
+    value: "2"
+stack:
+  - "React Native"
+  - "TypeScript"
+  - "React Navigation"
+  - "Tap Payments"
+  - "Firebase"
+  - "Zendesk"
+  - "Google Maps"
+  - "i18n / RTL"
+screenshots:
+  - src: "/projects/fashion-aggregator/buyer-home.jpg"
+    alt: "Reconstructed FashionAggregator buyer home screen with search, campaign content, categories, and buyer navigation"
+    caption: "Buyer discovery: search, campaign content, categories, catalogue, wishlist, stylist discovery, and profile entry points."
+    kind: "reconstruction"
+    displayScale: 2
+  - src: "/projects/fashion-aggregator/seller-dashboard.jpg"
+    alt: "Reconstructed FashionAggregator seller dashboard with product and order metrics"
+    caption: "Seller operations: store selection, product and order metrics, incoming-order review, and accept or reject actions."
+    kind: "reconstruction"
+    displayScale: 2
+  - src: "/projects/fashion-aggregator/product-details.jpg"
+    alt: "Reconstructed FashionAggregator product details screen with variants, rewards, cart, and buy-now actions"
+    caption: "Product commerce: imagery, variants, wishlist and sharing, loyalty points, add-to-cart, and buy-now entry points."
+    kind: "reconstruction"
+    displayScale: 2
+architecture: "The project is a React Native monorepo organized into mobile, web, reusable blocks, shared components, and a message-driven framework. The mobile application composes role-specific stack and bottom-tab navigators for Buyer, Seller, Stylist, and Delivery Partner journeys. Feature controllers own API and state coordination, while shared utilities handle storage, internationalization, RTL layout behavior, network status, reusable UI, and navigation messages."
+workflow:
+  - "Authenticate or continue through the buyer discovery experience."
+  - "Browse campaigns, categories, stores, products, stylists, and search filters."
+  - "Move through wishlist, cart, addresses, checkout, payment, orders, and return/refund paths."
+  - "Switch to role-specific Seller, Stylist, or Delivery Partner navigation after account setup and verification."
+decisions:
+  - decision: "Separate navigation by marketplace role"
+    problem: "Buyers, sellers, stylists, and delivery partners need materially different home screens, tabs, permissions, and workflows"
+    chosenApproach: "Compose a dedicated tab and stack hierarchy for each role while retaining shared authentication, profile, notification, and framework services"
+    evidence: "The mobile root registers distinct Buyer, Seller, Stylist, and Driver tab navigators plus their supporting route stacks"
+  - decision: "Treat internationalization as a layout concern"
+    problem: "Arabic support changes alignment, icon direction, spacing, and row order—not only translated strings"
+    chosenApproach: "Use shared helpers for text alignment, dynamic margins, image reversal, and flex direction alongside i18n strings"
+  - decision: "Present archived visuals transparently"
+    problem: "The private project has no APK, IPA, release artifact, or reachable archived backend for a genuine current runtime capture"
+    chosenApproach: "Build clearly labelled screen reconstructions from the committed assets, colors, components, and navigation instead of presenting mock screens as live captures"
+outcomes:
+  - "Delivered a four-role marketplace navigation model inside one React Native application"
+  - "Implemented buyer commerce paths covering discovery, product detail, wishlist, cart, address selection, checkout entry, orders, and refunds"
+  - "Implemented seller operations spanning stores, catalogue, inventory, CSV upload, pricing, promotions, order handling, refunds, earnings, and sales analytics"
+  - "Implemented stylist collaboration flows for profiles, portfolios, clients, chat, styling requests, product sourcing, weekly plans, orders, and pricing plans"
+  - "Implemented delivery-partner onboarding, documents, vehicles, delivery work, earnings, support, and profile management"
+evidence:
+  - "Feature claims were checked against imported screens, controllers, API configuration, and registered navigation routes on the private main branch"
+  - "The full-project commit was made from another account also owned by Pushpendra"
+limitations:
+  - "The archived API configuration points to a retired temporary ngrok endpoint, so end-to-end backend behavior is not presented as currently operational"
+  - "The repository contains no downloadable APK, IPA, release, or CI artifact for a genuine runtime screenshot"
+  - "The 288 screen registrations include generated and supporting blocks; the number describes routed source breadth, not 288 independently runtime-verified features"
+  - "The project uses an older React Native dependency stack and would require modernization before a new production release"
+lessons:
+  - "Large role-based mobile products stay understandable when navigation, shared services, and feature controllers have explicit boundaries"
+  - "Archived client work is strongest in a portfolio when source evidence, personal ownership, visual reconstruction, and current runtime limitations are all stated separately"
+---
+
+## Overview
+
+FashionAggregator is the largest multi-role mobile product in this portfolio. I
+maintained the private React Native project under accounts I own, with a single
+application supporting buyers, sellers, personal stylists, and delivery
+partners. Each role receives its own primary navigation and operational tools,
+while authentication, notifications, messaging, profiles, localization, and
+framework services remain shared.
+
+## Buyer experience
+
+The buyer journey covers campaign and category discovery, advanced search,
+stores, product details, variants, wishlist, cart, saved addresses, checkout
+entry, Tap payment screens, order status, returns and refunds, stylist
+discovery, notifications, support, policies, and profile settings.
+
+## Seller experience
+
+Seller navigation is organized around a dashboard, catalogue, orders, stores,
+and profile. The committed screens cover store creation and management,
+catalogue maintenance, product details, inventory selection and CSV upload,
+price updates, related-product pairing, promotions, incoming order decisions,
+refund handling, earnings, and sales reporting.
+
+## Stylist and delivery experiences
+
+Stylists can create and verify profiles, manage portfolios, work with clients,
+chat, receive styling requests, source products, create weekly plans, manage
+orders, and select pricing plans. Delivery partners have onboarding and
+document flows, vehicle management, delivery work, earnings, support, and
+profile tools.
+
+## Visual evidence
+
+The screens above are reconstructions from the archived source—not screenshots
+of a currently connected production backend. They reuse the repository's real
+visual assets, palette, route structure, and component behavior so the product
+can be evaluated without disguising the state of the old environment.

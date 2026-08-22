@@ -11,6 +11,14 @@ const pages = [
   { path: "/projects/rm-fitness-club", name: "projects-rm-fitness-club" },
   { path: "/projects/chatgpt-assist", name: "projects-chatgpt-assist" },
   {
+    path: "/projects/fashion-aggregator",
+    name: "projects-fashion-aggregator",
+  },
+  {
+    path: "/projects/peachpay-android-integration",
+    name: "projects-peachpay-android-integration",
+  },
+  {
     path: "/projects/realtime-voice-agent",
     name: "projects-realtime-voice-agent",
   },
