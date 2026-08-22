@@ -33,6 +33,21 @@ const controlStatusLabel: Record<string, string> = {
   planned: "Planned",
   not_used: "Not used",
 };
+
+const projectStatusLabel: Record<string, string> = {
+  active: "In production",
+  beta: "Beta",
+  completed: "Completed",
+  paused: "Paused",
+  prototype: "Prototype",
+};
+
+const repositoryVisibilityLabel: Record<string, string> = {
+  public: "Public source",
+  private: "Private source",
+  mixed: "Mixed source visibility",
+  none: "Source unavailable",
+};
 ---
 
 <html lang="en" style={`--site-accent: ${siteConfig.accentColor}`}>
@@ -73,6 +88,21 @@ const controlStatusLabel: Record<string, string> = {
         {d.title}
       </h1>
       <p class="mt-2 text-lg text-gray-600 dark:text-gray-400">{d.summary}</p>
+      <div class="mt-4 flex flex-wrap items-center gap-2">
+        <span
+          class="glass-pill rounded-full px-3 py-1 text-xs font-medium text-gray-700 dark:text-gray-300"
+        >
+          {projectStatusLabel[d.status] ?? d.status}
+        </span>
+        {
+          d.repositoryVisibility && (
+            <span class="text-xs font-medium text-gray-500 dark:text-gray-400">
+              {repositoryVisibilityLabel[d.repositoryVisibility] ??
+                d.repositoryVisibility}
+            </span>
+          )
+        }
+      </div>
       {
         metaRow.length > 0 && (
           <p class="mt-3 text-sm text-gray-500 dark:text-gray-400">
