@@ -23,6 +23,7 @@ const pages = [
   "/projects",
   "/projects/dallal-real-estate-marketplace",
   "/projects/ai-job-agent",
+  "/projects/rm-fitness-club",
   "/notes",
   "/notes/jwt-refresh-token-retry",
 ];

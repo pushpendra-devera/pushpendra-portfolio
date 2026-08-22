@@ -1,0 +1,134 @@
+---
+title: "RM Fitness Club"
+slug: "rm-fitness-club"
+summary: "A production website for a real, two-location gym in Indore, India — built end-to-end (site, domain, DNS, email, analytics, SEO, and a licensing-aware bilingual exercise library) in a single extended session, with a hand-written CSP that caught two real bugs on first deploy."
+status: "active"
+visibility: "public"
+noindex: false
+projectType: "Static marketing website + Node.js data pipeline (vanilla HTML/CSS/JS, zero build step)"
+role: "Sole developer — built and launched end-to-end for a real, paying local business"
+teamSize: "Solo"
+repositoryUrl: "https://github.com/pushpendra-devera/rm-fitness-club"
+repositoryVisibility: "public"
+constraints:
+  - "A real, paying local business as the client — not a demo or practice project"
+  - "Two physical gym locations, so every contact path (WhatsApp, lead form, footer, structured data) has to route to the correct branch"
+  - "A non-technical business owner, who needed the domain/DNS/SSL setup walked through from raw symptoms, not just handed a working URL"
+  - "No fabricated content — refused placeholder stats, fake testimonials, and invented certifications even when asked to make something up temporarily"
+  - "An open-source exercise dataset whose images/GIFs are separately owned and not covered by the dataset's own MIT license"
+  - "Zero build step on the main site, which ruled out dependencies that need a bundler"
+stack:
+  - "HTML5"
+  - "CSS3"
+  - "Vanilla JavaScript"
+  - "Node.js"
+  - "Cloudflare Pages"
+  - "Cloudflare DNS"
+  - "Cloudflare Email Routing"
+  - "Cloudflare Web Analytics"
+  - "Fuse.js"
+  - "PhotoSwipe"
+  - "Formspree"
+  - "Schema.org JSON-LD"
+  - "Google Search Console"
+  - "Content-Security-Policy / HSTS"
+stats:
+  - label: "Curated exercises"
+    value: "45"
+  - label: "Locations served"
+    value: "2"
+  - label: "Real bugs caught by the CSP"
+    value: "2"
+  - label: "Third-party licenses documented"
+    value: "3"
+architecture: "The main site is plain HTML/CSS/JS with no framework and no build step, deployed on Cloudflare Pages via its native GitHub integration — every push to main builds and deploys automatically, confirmed end-to-end with real test pushes rather than left as configured-and-assumed-working. A separate Node.js data pipeline generates the bilingual (English/Hindi) exercise library: it pulls from the open-source hasaneyldrm/exercises-dataset (MIT-licensed), explicitly strips every image and GIF field before that data ever touches the site (those assets are separately owned by Gym Visual and excluded from the MIT license), and the site renders the resulting 45 exercises with Fuse.js for client-side fuzzy search and PhotoSwipe for the photo gallery, both self-hosted. Two physical locations meant every contact mechanism — the WhatsApp float button, the lead form (including a 'preferred location' field that picks the destination WhatsApp number), the footer, and the JSON-LD structured data — routes per-branch instead of to one hardcoded number. Formspree backs the lead form as a fallback for visitors who close WhatsApp before sending. Security headers, including a hand-written Content-Security-Policy with no unsafe-inline for scripts, ship via Cloudflare Pages' _headers file."
+decisions:
+  - decision: "Strip every image/GIF from the third-party exercise dataset before it reaches the site"
+    problem: "The source dataset (hasaneyldrm/exercises-dataset) is MIT-licensed, but its images and GIFs are separately owned by Gym Visual and not covered by that license"
+    chosenApproach: "The data pipeline explicitly strips every image/GIF field before generating the site's exercise library, and a THIRD_PARTY_NOTICES.md credits every dependency (the dataset, Fuse.js, PhotoSwipe) with its actual license terms"
+    evidence: "45 curated bilingual exercises, matched to the gym's actual equipment, shipped with zero third-party imagery"
+  - decision: "Reject a physically-existing branding asset for licensing reasons"
+    problem: "A Hulk-themed mural, painted on the gym's own wall and photographed for its JustDial listing, was a candidate for the site's favicon/logo"
+    chosenApproach: "Rejected it despite being real, physically-existing gym signage, because Hulk is a Marvel-trademarked character and inappropriate for permanent site branding regardless of where it already existed physically"
+  - decision: "Verify a license directly instead of trusting GitHub's auto-detected badge"
+    problem: "MuscleMap (interactive muscle-highlight diagrams) looked like a strong addition to the exercise library, but its GitHub license badge looked questionable"
+    chosenApproach: "Investigated the actual license, found it was fine (the auto-detector had mis-flagged it), but confirmed it wasn't safely drop-in-able without a bundler on a zero-build-step site — held it rather than force a rushed integration"
+  - decision: "Hand-write a Content-Security-Policy with no unsafe-inline for scripts"
+    problem: "A permissive or absent CSP would hide real integration bugs instead of catching them at deploy time"
+    chosenApproach: "A strict, hand-written CSP shipped via Cloudflare Pages' _headers file"
+    evidence: "Caught two real bugs on first deploy: Google's Maps embed silently redirecting to a different host than its embed URL implied, and a PhotoSwipe lightbox selector accidentally also matching same-level Instagram profile links and trying to load them as images — both blocked by the CSP itself, not found through manual testing"
+  - decision: "Correct the site to match ground truth, even when that meant contradicting content already live"
+    problem: "The site read '4 Expert Trainers' while only 3 trainer profiles existed, and separately the owner's own promotional flyer listed different pricing and hours than what was already published"
+    chosenApproach: "Refused to publish placeholder stats, fake testimonials, or invented certifications even when asked to make something up temporarily; sourced real, paraphrased-and-linked Google/JustDial reviews instead, fixed the trainer-count mismatch, and cross-checked the site against the flyer as the more authoritative real-world source"
+  - decision: "Route every contact mechanism per-location instead of one hardcoded number"
+    problem: "The gym operates two physical locations, so a single WhatsApp number or lead form would misroute leads to the wrong branch"
+    chosenApproach: "WhatsApp float button, lead form (with a 'preferred location' field), footer, and JSON-LD structured data all route per-branch; Formspree is wired as a fallback backend for visitors who close WhatsApp before sending, tested end-to-end"
+safetyControls:
+  - name: "Hardened Content-Security-Policy"
+    status: "implemented"
+    detail: "Hand-written CSP with no unsafe-inline for scripts, shipped via Cloudflare Pages' _headers; caught two real integration bugs (a Maps embed host redirect and a PhotoSwipe/Instagram selector collision) on first deploy"
+  - name: "HSTS and additional hardened headers"
+    status: "implemented"
+    detail: "Set alongside the CSP via Cloudflare Pages' _headers file"
+  - name: "No fabricated content"
+    status: "implemented"
+    detail: "No placeholder stats, fake testimonials, or invented certifications are published; every claim traces back to a real, sourced origin — Google/JustDial reviews, the gym's own promotional flyer, or its Google Business Profile photos"
+testing:
+  - "Auto-deploy verified end-to-end with real pushes to main, not just configured and assumed working"
+  - "Lead form and WhatsApp fallback tested end-to-end from a visitor's perspective"
+  - "CSP validated live at first deploy by the exact two bugs it caught"
+  - "DNS/SSL propagation diagnosed directly via curl (a TLSV1_ALERT_UNRECOGNIZED_NAME) and cross-checked against a real-world symptom — a generic 'certificate not trusted' error inside Instagram's in-app browser — traced back to the same root cause"
+  - "No automated test suite or CI is set up for this static site; verification was manual and live rather than test-suite-driven"
+observability: "Cloudflare Web Analytics tracks traffic without cookies. Google Search Console handles indexing and sitemap monitoring."
+releaseEngineering: "Cloudflare Pages' native GitHub integration builds and deploys on every push to main — no separate GitHub Actions workflow. Getting there wasn't a one-shot: connecting an existing direct-upload Cloudflare Pages project to GitHub silently failed three times in a row for three different reasons (an unsaved 'Connect to Git' form left as a draft, a production branch of main that didn't exist yet because git init had defaulted to master, and finally the actual save completing) — each diagnosed purely from dashboard screenshots and live curl checks, including comparing ETags and fetching the deployed README.md directly to prove which build was actually live, since the API token in use didn't have read access to Pages project/deployment details."
+failureHandling: "The lead form has a real Formspree backend as a fallback for visitors who close WhatsApp before sending, tested end-to-end. The hand-written CSP fails closed on unexpected third-party requests rather than silently allowing them, which is how it caught the Maps and PhotoSwipe bugs in the first place."
+outcomes:
+  - "Live in production at rmfitnessgym.in for a real, paying two-location gym business, not a demo"
+  - "Auto-deploy confirmed end-to-end with real test pushes to main"
+  - "The hand-written CSP caught two real integration bugs (a Maps embed host redirect, a PhotoSwipe/Instagram link collision) on first deploy, before manual testing found them"
+  - "45 bilingual (English/Hindi) exercises shipped with zero third-party imagery, fully licensed and credited in THIRD_PARTY_NOTICES.md"
+  - "Diagnosed and resolved a three-attempt CI/CD connection failure purely from dashboard screenshots and live curl/ETag checks, with no API access to Pages deployment details"
+  - "Walked a non-technical business owner through DNS setup, a GoDaddy registrar hold, and SSL propagation lag, from raw symptoms to a working, trusted certificate"
+evidence:
+  - "Live site: rmfitnessgym.in"
+  - "Public repository: github.com/pushpendra-devera/rm-fitness-club, with topics set for discoverability (static-site, cloudflare-pages, vanilla-javascript, small-business, gym-website, bilingual, content-security-policy, india)"
+limitations:
+  - "Google Business Profile access is still pending Google's own verification, outside anyone's control"
+  - "Real trainer photos and photos specific to the Gali 08 location are still pending from the business owner"
+  - "MuscleMap (interactive muscle-highlight diagrams) is deliberately on hold — its license checked out, but it isn't safely drop-in-able without a bundler on this zero-build-step site"
+  - "No automated test suite or CI is set up for this static site; correctness was verified manually and live rather than through repeatable checks"
+lessons:
+  - "A hand-written CSP with no unsafe-inline for scripts is worth the setup cost on its own — it caught two real bugs (a Maps embed host redirect and a lightbox/Instagram selector collision) that manual testing hadn't found yet"
+  - "License diligence has to go one level deeper than the top-level license file — an MIT-licensed dataset can still ship separately-owned images, and a GitHub auto-detected license badge can be wrong in either direction"
+  - "Content integrity — refusing placeholders, cross-checking against the owner's own flyer, fixing a trainer-count mismatch — matters as much on a small local-business site as it does on a larger product"
+---
+
+## Overview
+
+RM Fitness Club is a production website for a real, two-location gym in
+Musakhedi, Indore, India, built and launched end-to-end — site, domain, DNS,
+email, analytics, SEO, and a custom bilingual exercise library — in a single
+extended session, for an actual paying local business rather than a demo or
+practice project.
+
+## Context
+
+The brief wasn't just "build a site." It included setting up infrastructure a
+non-technical business owner couldn't do alone (domain DNS, email routing,
+SSL), making licensing calls on a third-party exercise dataset before
+publishing anything derived from it, and repeatedly choosing accuracy over
+convenience — refusing invented stats and testimonials, correcting a
+trainer-count mismatch, and re-checking the live site against the owner's own
+printed flyer rather than trusting what was already published. The gym also
+operates two physical locations, so contact mechanisms throughout the site
+needed to route to the correct branch instead of assuming there was only one.
+
+---
+
+_This case study is drawn from a detailed project brief covering the site's
+real, verified current state: the live deployment, the public repository, and
+the specific infrastructure and licensing decisions made while building it.
+Business outcomes (membership signups, revenue impact) are intentionally not
+claimed anywhere on this page, since they weren't part of the source material
+— the sections above describe the build, the infrastructure, and the
+licensing process itself, not unverified business results._

@@ -8,6 +8,7 @@ const pages = [
     name: "projects-dallal",
   },
   { path: "/projects/ai-job-agent", name: "projects-ai-job-agent" },
+  { path: "/projects/rm-fitness-club", name: "projects-rm-fitness-club" },
 ];
 
 for (const { path, name } of pages) {
