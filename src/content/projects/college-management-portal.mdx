@@ -1,0 +1,83 @@
+---
+title: "College Management Portal"
+slug: "college-management-portal"
+summary: "A Django college operations portal with separate HOD, staff, and student workflows for academic records, attendance, results, leave approvals, and feedback."
+status: "completed"
+visibility: "public"
+noindex: false
+featured: false
+displayOrder: 6
+projectType: "Full-stack academic project (Django + SQLite)"
+role: "Major-project implementation"
+repositoryVisibility: "private"
+constraints:
+  - "Serve three user roles from one authentication system"
+  - "Keep academic records and role-specific actions separated by portal"
+  - "Support attendance entry, review, and reporting across staff and student workflows"
+stats:
+  - label: "User roles"
+    value: "3"
+  - label: "Application routes"
+    value: "82"
+  - label: "HTML templates"
+    value: "49"
+  - label: "Data models"
+    value: "16"
+stack:
+  - "Python"
+  - "Django"
+  - "SQLite"
+  - "Django ORM"
+  - "Bootstrap"
+  - "AdminLTE"
+  - "Chart.js"
+architecture: "A custom Django user model adds HOD, staff, and student roles, with post-save signals creating the corresponding profile record. Role-specific view modules divide administrative, staff, and student operations. The relational model links courses, subjects, sessions, students, attendance records, leave requests, feedback, notifications, and results; server-rendered templates provide a separate dashboard and workflow set for each role."
+workflow:
+  - "Authenticate by email and route the user to the portal for their assigned role."
+  - "HOD users manage staff, students, courses, subjects, and academic sessions."
+  - "Staff select a subject and session, record or update attendance, and enter student results."
+  - "Students review attendance and results, submit feedback, and apply for leave."
+  - "HOD users approve or reject leave and reply to staff or student feedback."
+decisions:
+  - decision: "One custom identity model for three portals"
+    problem: "The application needs one login flow while each role owns different data and actions"
+    chosenApproach: "Extend Django's user model with a role field, then create one-to-one HOD, staff, or student profiles through post-save signals"
+  - decision: "Separate role view modules"
+    problem: "Putting every workflow in one view file would make permission and maintenance boundaries harder to follow"
+    chosenApproach: "Keep HOD, staff, and student request handlers in dedicated modules while sharing the same domain model"
+outcomes:
+  - "Implemented a complete three-role portal rather than isolated CRUD screens"
+  - "Connected attendance capture to per-student reports and student-facing review"
+  - "Covered administrative CRUD, results, leave decisions, feedback replies, and profile management"
+evidence:
+  - "Current repository source contains 82 URL patterns, 49 HTML templates, and 16 active Django model classes"
+limitations:
+  - "The repository contains the project as one large commit, so its development history is not reviewable"
+  - "The SQLite database and uploaded media are committed to the repository; a production version should use migrations, seed data, external media storage, and stronger privacy hygiene"
+  - "The committed test module does not contain a meaningful automated test suite"
+  - "This is an academic project, not a production deployment"
+lessons:
+  - "Role-based systems become easier to reason about when identity, domain profiles, and role-specific workflows have explicit boundaries"
+---
+
+## Overview
+
+This major project is a complete college-management workflow built with Django.
+It uses one email-based login system and directs HOD, staff, and student users to
+different portals backed by a shared academic data model.
+
+## Role coverage
+
+**HOD / administrator:** manages staff, students, courses, subjects, and
+sessions; reviews attendance; approves or rejects leave; and responds to
+feedback.
+
+**Staff:** records and updates attendance, submits leave and feedback, maintains
+a profile, and enters exam and assignment results.
+
+**Student:** reviews attendance and results, applies for leave, submits
+feedback, and maintains a profile.
+
+The project is useful evidence of full-stack and relational application work,
+but it remains labelled as an academic build because it does not have production
+release or operational evidence.

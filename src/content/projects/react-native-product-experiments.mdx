@@ -1,12 +1,12 @@
 ---
 title: "React Native Product Experiments"
 slug: "react-native-product-experiments"
-summary: "Seven source-reviewed repositories covering onboarding and feed UI, parking state and billing, paginated news, NASA data, location services, reverse geocoding, and countdown interaction design."
+summary: "Eight source-reviewed repositories covering onboarding and feed UI, parking state and billing, paginated news and Pokémon data, NASA data, location services, reverse geocoding, and countdown interaction design."
 status: "prototype"
 visibility: "public"
 noindex: false
 featured: false
-displayOrder: 6
+displayOrder: 7
 projectType: "Collection of focused React Native and Expo prototypes"
 role: "Sole developer"
 teamSize: "Solo"
@@ -17,9 +17,9 @@ constraints:
   - "Show breadth without presenting learning exercises as production systems"
 stats:
   - label: "Repositories reviewed"
-    value: "7"
+    value: "8"
   - label: "Product concepts"
-    value: "6"
+    value: "7"
   - label: "README files"
     value: "0"
 stack:
@@ -33,6 +33,7 @@ stack:
   - "NASA NeoWs API"
   - "MapQuest Geocoding API"
   - "Algolia HN Search API"
+  - "PokéAPI"
 architecture: "Each repository is a small, task-focused mobile application. Navigation is handled with stack or tab navigators; API-backed experiments use lightweight fetch/Axios modules; the later parking-lot version moves booking state from navigation parameters into shared React Context. This collection is presented together because the engineering signal is in the range of mobile concerns explored, not in claiming that each early exercise is a standalone production case study."
 outcomes:
   - "BostonResearch: animated onboarding, login UI, and a two-layout research-news dashboard with reusable story data"
@@ -41,6 +42,7 @@ outcomes:
   - "Asteriod: NASA near-earth-object lookup by ID plus a random-result path into a shared details screen"
   - "Map-Question: device permission, GPS lookup, periodic reverse geocoding, and a running location list"
   - "React-Native-TImer: picker-driven minute/second selection with start, stop, live MM:SS countdown, and reset behavior"
+  - "Pokemon: searchable, paginated PokéAPI list with sprite cards and navigation into a fetched details payload"
 evidence:
   - "Every claim on this page was checked against the current source rather than inferred from repository names"
 limitations:
@@ -49,6 +51,7 @@ limitations:
   - "NewsPost renders raw story JSON on its details screen rather than a designed detail view"
   - "The NASA and MapQuest demo keys are hardcoded in source and should be rotated and moved out of the client before linking those repositories prominently"
   - "Map-Question has an empty Settings tab, does not clear its interval on unmount, and closes over the initial location list when appending results"
+  - "Pokemon fetches full records for every list item and renders the selected details payload as raw JSON rather than a designed detail screen"
   - "These are learning prototypes without production backends, release evidence, or automated test suites"
 lessons:
   - "Small prototypes are useful evidence when their scope is explicit: they show repeated practice with navigation, asynchronous APIs, device permissions, state ownership, and iterative refactoring without being mislabelled as shipped products"
@@ -103,6 +106,15 @@ correction before this should be treated as a finished app.
 
 A single-screen countdown interaction with minute and second picker wheels,
 start/stop control, an MM:SS display, and automatic reset at zero.
+
+### Pokemon
+
+A PokeAPI browser with name search, a three-column sprite list, and incremental
+loading in groups of 20. Selecting or searching for a Pokémon fetches its full
+record and navigates to a detail route; the current detail UI displays that
+payload as raw JSON. The source lives on a nonstandard branch named `Pokemon`
+and includes generated Expo cache files, which should be cleaned before using
+the repository itself as a code sample.
 
 ---
 

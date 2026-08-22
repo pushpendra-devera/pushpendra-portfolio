@@ -1,0 +1,51 @@
+---
+title: "3D Sun/Moon Theme Experiment"
+slug: "webgl-theme-experiment"
+summary: "A React and Three.js interaction that changes between light and dark scenes by animating a rotating sun and moon instead of using a conventional CSS-only toggle."
+status: "prototype"
+visibility: "public"
+noindex: false
+featured: false
+displayOrder: 8
+projectType: "Frontend interaction experiment (React + WebGL)"
+role: "Sole developer"
+repositoryUrl: "https://github.com/pushpendra-devera/dark-light-mode"
+repositoryVisibility: "public"
+constraints:
+  - "Represent theme state with a 3D visual transition"
+  - "Render the scene directly inside a React component"
+stats:
+  - label: "Scene states"
+    value: "2"
+  - label: "WebGL objects"
+    value: "2"
+stack:
+  - "React"
+  - "Three.js"
+  - "WebGL"
+  - "CSS"
+architecture: "A React effect creates a transparent Three.js renderer, perspective camera, scene, and two sphere meshes. An animation loop rotates the scene and linearly interpolates sun and moon material opacity. Clicking the canvas changes React theme state, mesh visibility, and the scene background."
+outcomes:
+  - "Combined React state with an imperative Three.js render loop"
+  - "Used opacity interpolation to turn a binary theme change into an animated visual transition"
+evidence:
+  - "Feature claims verified against the current public repository source"
+limitations:
+  - "The effect recreates the renderer when theme state changes rather than keeping one persistent scene"
+  - "The animation frame, geometries, materials, and renderer are not explicitly cancelled or disposed during cleanup"
+  - "The canvas uses a fixed 400 × 400 size and does not respond to container resizing"
+  - "This is a focused interaction prototype, not a complete product"
+lessons:
+  - "Imperative rendering can live inside React, but long-lived scene objects and animation lifecycles should remain stable across state changes"
+---
+
+## Overview
+
+This experiment replaces a standard dark-mode switch with a small WebGL scene.
+A sun and moon share the scene, and a click changes theme state while the render
+loop interpolates their visibility.
+
+Its portfolio value is intentionally narrow: it demonstrates direct Three.js
+scene setup, animation, and React integration. The limitations document the
+lifecycle work that would be required before reusing the approach in a larger
+application.

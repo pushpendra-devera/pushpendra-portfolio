@@ -18,6 +18,14 @@ const pages = [
     path: "/projects/react-native-product-experiments",
     name: "projects-react-native-product-experiments",
   },
+  {
+    path: "/projects/college-management-portal",
+    name: "projects-college-management-portal",
+  },
+  {
+    path: "/projects/webgl-theme-experiment",
+    name: "projects-webgl-theme-experiment",
+  },
 ];
 
 for (const { path, name } of pages) {
