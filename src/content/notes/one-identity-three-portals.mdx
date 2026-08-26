@@ -1,0 +1,49 @@
+---
+title: "One identity model can serve three role-specific portals"
+slug: "one-identity-three-portals"
+summary: "A shared login does not require a shared workflow: identity can stay centralized while HOD, staff, and student operations remain separated."
+publishDate: "2026-08-21"
+tags: ["Django", "Authorization", "Architecture"]
+status: "published"
+visibility: "public"
+noindex: false
+sourceProject: "college-management-portal"
+---
+
+A role-based application needs one answer to "who is this user?" and several
+answers to "what can this user do?" Mixing those questions produces large view
+modules filled with role checks. Separating them creates a clearer boundary.
+
+## Centralize identity
+
+The college portal extends Django's user model with a role and creates the
+matching HOD, staff, or student profile. Email authentication and account
+identity stay in one place. The role determines which portal the user enters
+after sign-in.
+
+That avoids maintaining unrelated authentication systems for users who still
+belong to the same institution.
+
+## Separate operational workflows
+
+The three roles interact with the same academic domain but own different
+actions:
+
+- HOD users manage courses, sessions, staff, students, approvals, and replies.
+- Staff users record attendance, enter results, and submit leave or feedback.
+- Students review records and submit their own requests.
+
+Dedicated view modules keep those request handlers apart while the relational
+model connects subjects, sessions, attendance, results, leave, and feedback.
+
+## The production caveat
+
+Role routing is not sufficient authorization by itself. Every sensitive view
+still needs server-side permission checks, and production records should not be
+distributed through a committed SQLite database or uploaded-media folder. Test
+fixtures, migrations, external storage, and privacy-aware seed data are safer
+boundaries.
+
+The broader lesson is that shared identity and separated workflows complement
+each other. One login system simplifies account management; explicit portal
+boundaries make authorization and maintenance easier to audit.

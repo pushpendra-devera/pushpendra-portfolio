@@ -11,6 +11,14 @@ const pages = [
   { path: "/projects/rm-fitness-club", name: "projects-rm-fitness-club" },
   { path: "/projects/chatgpt-assist", name: "projects-chatgpt-assist" },
   {
+    path: "/projects/fashion-aggregator",
+    name: "projects-fashion-aggregator",
+  },
+  {
+    path: "/projects/peachpay-android-integration",
+    name: "projects-peachpay-android-integration",
+  },
+  {
     path: "/projects/realtime-voice-agent",
     name: "projects-realtime-voice-agent",
   },
@@ -26,6 +34,8 @@ const pages = [
     path: "/projects/webgl-theme-experiment",
     name: "projects-webgl-theme-experiment",
   },
+  { path: "/projects/localvodsaudi", name: "projects-localvodsaudi" },
+  { path: "/projects/seedcard", name: "projects-seedcard" },
 ];
 
 for (const { path, name } of pages) {

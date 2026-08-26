@@ -1,0 +1,52 @@
+---
+title: "A strict CSP is a debugging tool, not just a security header"
+slug: "csp-as-a-debugging-tool"
+summary: "A restrictive Content Security Policy can expose integration mistakes early by turning unexpected network and script behavior into visible failures."
+publishDate: "2026-08-26"
+tags: ["Web security", "CSP", "Debugging"]
+status: "published"
+visibility: "public"
+noindex: false
+sourceProject: "rm-fitness-club"
+---
+
+A Content Security Policy is usually described as a security control: declare
+which scripts, frames, images, and connections a page may load, then block
+everything else. That is true, but it misses a second benefit. A strict policy
+also makes incorrect assumptions visible.
+
+## Failure is useful information
+
+Without a policy, an integration can silently contact a different host than
+the one a developer expected. A broad image selector can accidentally feed a
+non-image URL into a gallery. The page may appear mostly functional, leaving
+the mistake to surface later as inconsistent behavior.
+
+With a restrictive policy, the browser refuses that unexpected action and
+reports exactly which directive was violated. The failure becomes an
+investigation starting point rather than a hidden defect.
+
+## What happened on RM Fitness Club
+
+The site's hand-written policy deliberately avoided `unsafe-inline` for
+scripts and listed the external origins the product was expected to use. On
+the first deployment it caught two real integration problems:
+
+- A Google Maps embed redirected through a host that was not represented in
+  the initial frame policy.
+- A PhotoSwipe selector also matched Instagram profile links, causing the
+  gallery to attempt to load those links as images.
+
+Neither problem required weakening the policy. The correct response was to
+understand the request and fix either the allow-list or the selector.
+
+## The practical rule
+
+Start with the narrowest policy the product actually needs. When something is
+blocked, do not immediately add a wildcard or `unsafe-inline`. First determine
+whether the request is expected, whether the selected element is correct, and
+whether the third-party host is part of the intended data flow.
+
+A policy that fails closed creates some setup work, but it also gives the
+browser a precise way to tell you when the implementation and the architecture
+have drifted apart.

@@ -1,0 +1,52 @@
+---
+title: "When the README is missing, review prototypes from the source"
+slug: "source-first-prototype-review"
+summary: "Small repositories can show useful engineering practice, but only if implemented behavior is separated from placeholders, mock services, and unfinished screens."
+publishDate: "2026-08-20"
+tags: ["React Native", "Code review", "Prototyping"]
+status: "published"
+visibility: "public"
+noindex: false
+sourceProject: "react-native-product-experiments"
+---
+
+A repository name is not evidence. A project called "payment," "weather," or
+"authentication" may contain a complete workflow, a static screen, or an
+untouched starter. When documentation is absent, the portfolio description has
+to come from the source.
+
+## Trace the user path
+
+For a small mobile prototype, start with navigation and follow each reachable
+screen. Then inspect where its data comes from:
+
+- Is the feed static, fetched, or generated?
+- Does the login button validate anything?
+- Is the payment endpoint a provider or a status-code test service?
+- Does a detail route render a designed view or raw JSON?
+- Are timers and location subscriptions cleaned up on unmount?
+
+This produces a more accurate picture than counting files or copying a
+repository description.
+
+## Limitations are part of the evidence
+
+The React Native experiment collection includes real implementations of
+pagination, device location, reverse geocoding, countdown state, navigation,
+search, and iterative state refactoring. It also includes static content,
+placeholder endpoints, hardcoded demo keys, raw-data detail screens, and
+missing lifecycle cleanup.
+
+Both sides matter. Removing limitations would turn learning projects into
+inflated product claims. Ignoring implemented behavior would hide genuine
+practice across mobile concerns.
+
+## Grouping can be more honest
+
+Eight focused repositories do not need eight featured case studies. Grouping
+them as product experiments communicates breadth while reserving deeper case
+studies for production or source-rich work.
+
+The rule is simple: describe what the code reaches today, label mock and
+unfinished paths, and leave untouched starters out. Source-first review makes a
+portfolio smaller, more credible, and more useful in technical conversation.

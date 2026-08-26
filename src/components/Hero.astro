@@ -2,6 +2,11 @@
 import { createAvatar } from "@dicebear/core";
 import { notionists } from "@dicebear/collection";
 import { siteConfig } from "../config";
+import {
+  formatExperienceCompact,
+  formatExperienceLong,
+  getExperienceDuration,
+} from "../utils/experience";
 
 // Deterministic abstract avatar (MIT/CC0-licensed generator, no real photo
 // or likeness) generated at build time from the site owner's name as seed.
@@ -10,8 +15,9 @@ const avatarSvg = createAvatar(notionists, {
   backgroundColor: ["transparent"],
 }).toString();
 
-// "4.6 years of experience" is the figure stated in the resume summary.
-const yearsExperience = "4.6+";
+const experienceDuration = getExperienceDuration(siteConfig.careerStartDate);
+const experienceCompact = formatExperienceCompact(experienceDuration);
+const experienceLong = formatExperienceLong(experienceDuration);
 const currentCompany = siteConfig.experience?.[0]?.company;
 const coreSkills = siteConfig.skills.slice(0, 4);
 ---
@@ -40,8 +46,8 @@ const coreSkills = siteConfig.skills.slice(0, 4);
           class="font-plex-sans mt-5 text-pretty text-base sm:text-lg leading-relaxed text-gray-600 dark:text-gray-400 max-w-xl"
         >
           I build production mobile apps for Android and iOS &mdash; {
-            yearsExperience
-          } years in React Native and TypeScript. Currently shipping <span
+            experienceCompact
+          } in React Native and TypeScript. Currently shipping <span
             class="text-gray-900 dark:text-gray-100 font-semibold"
             >Dallal</span
           >, a bilingual real-estate marketplace live in Kuwait with 75+ screens,
@@ -185,8 +191,13 @@ const coreSkills = siteConfig.skills.slice(0, 4);
             >
               Experience
             </dt>
-            <dd class="text-sm font-semibold text-gray-900 dark:text-gray-100">
-              {yearsExperience} yrs
+            <dd
+              class="text-sm font-semibold text-gray-900 dark:text-gray-100"
+              data-experience-counter
+              data-career-start={siteConfig.careerStartDate}
+              aria-label={`${experienceLong} of professional experience`}
+            >
+              {experienceCompact}
             </dd>
           </div>
           <div class="flex items-baseline justify-between">
@@ -228,6 +239,28 @@ const coreSkills = siteConfig.skills.slice(0, 4);
     </div>
   </div>
 </div>
+
+<script>
+  import {
+    formatExperienceCompact,
+    formatExperienceLong,
+    getExperienceDuration,
+  } from "../utils/experience";
+
+  const counter = document.querySelector<HTMLElement>(
+    "[data-experience-counter]",
+  );
+  const careerStart = counter?.dataset.careerStart;
+
+  if (counter && careerStart) {
+    const duration = getExperienceDuration(careerStart);
+    counter.textContent = formatExperienceCompact(duration);
+    counter.setAttribute(
+      "aria-label",
+      `${formatExperienceLong(duration)} of professional experience`,
+    );
+  }
+</script>
 
 <style>
   @keyframes fadeIn {

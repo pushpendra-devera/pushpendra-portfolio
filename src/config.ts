@@ -18,6 +18,7 @@ export interface SiteConfig {
   title: string;
   description: string;
   accentColor: string;
+  careerStartDate: string;
   resumeUrl: string;
   social: {
     email: string;
@@ -35,8 +36,9 @@ export const siteConfig: SiteConfig = {
   name: "Pushpendra Singh",
   title: "React Native Developer | Software Engineer",
   description:
-    "Portfolio of Pushpendra Singh, a React Native Developer and Software Engineer with 4.6+ years of experience building production mobile applications for Android and iOS.",
+    "Portfolio of Pushpendra Singh, a React Native Developer and Software Engineer building production mobile applications for Android and iOS since January 2022.",
   accentColor: "#a8531f",
+  careerStartDate: "2022-01-01",
   resumeUrl: "/Pushpendra-Singh-Resume.pdf",
   social: {
     email: "pushpendra.devera@gmail.com",
@@ -44,7 +46,7 @@ export const siteConfig: SiteConfig = {
     github: "https://github.com/pushpendra-devera",
   },
   aboutMe:
-    "React Native Developer with 4.6 years of experience building production mobile applications for Android and iOS. Strong in React Native, TypeScript, API integration, native platform integrations, real-time communication, push notifications, analytics, performance optimization, and release workflows. Core contributor to Dallal Real Estate Marketplace, a bilingual Kuwait-focused mobile app published on the App Store and Google Play with property search, listing, messaging, calling, verification, maps, analytics, and OTA release support.",
+    "React Native Developer building production mobile applications for Android and iOS since January 2022. Strong in React Native, TypeScript, API integration, native platform integrations, real-time communication, push notifications, analytics, performance optimization, and release workflows. Core contributor to Dallal Real Estate Marketplace, a bilingual Kuwait-focused mobile app published on the App Store and Google Play with property search, listing, messaging, calling, verification, maps, analytics, and OTA release support.",
   skills: [
     "React Native",
     "TypeScript",

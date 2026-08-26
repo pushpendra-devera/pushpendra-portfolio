@@ -1,0 +1,83 @@
+---
+title: "PeachPay Android Checkout Integration"
+slug: "peachpay-android-integration"
+summary: "An archived Android integration reference for Peach Payments/OPPWA checkout, covering checkout-ID creation, card and SEPA methods, 3-D Secure, and host-app callbacks."
+status: "prototype"
+visibility: "public"
+noindex: false
+featured: false
+displayOrder: 10
+projectType: "Archived Android payment SDK integration reference"
+role: "Fork owner and integration reviewer"
+repositoryUrl: "https://github.com/pushpendra-devera/peachpay"
+repositoryVisibility: "public"
+constraints:
+  - "Wrap a third-party native checkout SDK behind a small host-app API"
+  - "Obtain a server-generated checkout ID before opening payment UI"
+  - "Return synchronous, asynchronous, cancelled, and failed outcomes to the calling application"
+stats:
+  - label: "Payment brands"
+    value: "3"
+  - label: "Integration modules"
+    value: "2"
+  - label: "Upstream era"
+    value: "2017"
+stack:
+  - "Android"
+  - "Java"
+  - "Peach Payments"
+  - "OPPWA Mobile SDK"
+  - "3-D Secure"
+  - "BroadcastReceiver"
+architecture: "The repository contains an Android library module, a minimal test application, and the bundled OPPWA mobile SDK. The host constructs a payment JSON payload and starts the library wrapper. The wrapper validates input, requests a checkout ID from a configured server, launches the SDK checkout activity with enabled brands and 3-D Secure WebView support, then broadcasts success or failure back to a listener in the host app."
+workflow:
+  - "Supply amount, currency, transaction type, environment, and a server checkout URL."
+  - "Validate the request and obtain a checkout ID asynchronously from the host backend."
+  - "Configure Visa, Mastercard, and SEPA Direct Debit plus 3-D Secure WebView behavior."
+  - "Launch the OPPWA checkout activity and process synchronous, asynchronous, cancelled, or error results."
+  - "Return the result to the host application through a broadcast-backed listener."
+decisions:
+  - decision: "Keep payment credentials on the server side"
+    problem: "The mobile SDK needs a checkout ID but merchant credentials should not be embedded in the Android client"
+    chosenApproach: "Call a configurable host backend for the checkout ID, then pass only that identifier into the SDK"
+  - decision: "Expose a small callback surface to host apps"
+    problem: "The native checkout activity can finish through several synchronous and asynchronous paths"
+    chosenApproach: "Translate SDK results into a simple success/failure listener delivered through an Android broadcast"
+outcomes:
+  - "Documents the full Android flow from host parameters to checkout-ID request, SDK configuration, payment activity, and callback"
+  - "Includes Visa, Mastercard, SEPA Direct Debit, and WebView-based 3-D Secure configuration"
+  - "Includes a minimal demonstration application for invoking a EUR test transaction and displaying callback results"
+evidence:
+  - "Claims were checked directly against the Java library, manifest, bundled SDK module, and test application"
+limitations:
+  - "This repository is an unchanged fork; the upstream implementation and all 14 commits are authored by Shardul, so it is presented as an integration reference rather than original SDK authorship"
+  - "The archived live-mode branch repeats the test-mode condition, which makes live provider initialization unreachable until corrected"
+  - "The project uses an obsolete Android Support/Gradle stack and a 2017 payment SDK, and it has no current build artifact or release evidence"
+  - "The demo starts its payment call automatically and does not provide a portfolio-worthy application interface"
+lessons:
+  - "A payment wrapper should keep merchant credentials behind a backend boundary and make every cancellation, error, synchronous, and asynchronous result explicit"
+  - "Forked reference code can demonstrate integration analysis, but upstream authorship and archived defects must remain visible"
+---
+
+## What this repository demonstrates
+
+This public fork is useful as an integration reference rather than as an
+original product claim. Its library surface shows how a host Android
+application can provide payment parameters, obtain a checkout ID from its own
+server, configure the native Peach Payments/OPPWA checkout, and receive a
+compact success or failure callback.
+
+## Verified payment flow
+
+The source validates amount, currency, transaction type, environment, and the
+server URL. It then obtains the checkout identifier asynchronously, enables
+Visa, Mastercard, and SEPA Direct Debit, turns on WebView support for 3-D
+Secure, launches the SDK checkout activity, and handles completion,
+cancellation, SDK errors, and the asynchronous callback path.
+
+## Why it remains a supporting project
+
+The implementation is old, the live environment condition contains a defect,
+and the Git history is entirely upstream-authored. Keeping it as a small,
+accurately labelled reference demonstrates payment-flow analysis without
+overstating ownership or current production readiness.

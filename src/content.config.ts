@@ -22,6 +22,14 @@ const statSchema = z.object({
   value: z.string(),
 });
 
+const screenshotSchema = z.object({
+  src: z.string(),
+  alt: z.string(),
+  caption: z.string().optional(),
+  kind: z.enum(["capture", "reconstruction"]).default("capture"),
+  displayScale: z.number().min(1).max(3).default(1),
+});
+
 const projects = defineCollection({
   loader: glob({ pattern: "**/*.mdx", base: "./src/content/projects" }),
   schema: z.object({
@@ -54,6 +62,7 @@ const projects = defineCollection({
     responsibilities: z.array(z.string()).optional(),
     stack: z.array(z.string()).optional(),
     stats: z.array(statSchema).optional(),
+    screenshots: z.array(screenshotSchema).optional(),
     architecture: z.string().optional(),
     workflow: z.array(z.string()).optional(),
     decisions: z.array(decisionSchema).optional(),

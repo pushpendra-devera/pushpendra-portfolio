@@ -157,6 +157,57 @@ const repositoryVisibilityLabel: Record<string, string> = {
         )
       }
 
+      {
+        d.screenshots && d.screenshots.length > 0 && (
+          <section class="mt-10" aria-labelledby="project-screens-heading">
+            <div class="flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <h2
+                  id="project-screens-heading"
+                  class="text-xl font-bold text-gray-900 dark:text-gray-50"
+                >
+                  Product screens
+                </h2>
+                <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                  Visual evidence from the project, with reconstructed screens
+                  labelled explicitly.
+                </p>
+              </div>
+            </div>
+            <div class="mt-5 grid gap-5 sm:grid-cols-3">
+              {d.screenshots.map((screenshot) => (
+                <figure class="surface-card overflow-hidden rounded-2xl">
+                  <div class="relative aspect-[1/2] overflow-hidden bg-white">
+                    <img
+                      src={screenshot.src}
+                      alt={screenshot.alt}
+                      loading="lazy"
+                      decoding="async"
+                      class="h-full w-full object-cover"
+                      style={
+                        screenshot.displayScale > 1
+                          ? `transform: scale(${screenshot.displayScale}); transform-origin: top left;`
+                          : undefined
+                      }
+                    />
+                    {screenshot.kind === "reconstruction" && (
+                      <span class="absolute right-2 top-2 rounded-full border border-gray-200 bg-white/90 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-gray-700 shadow-sm">
+                        Source reconstruction
+                      </span>
+                    )}
+                  </div>
+                  {screenshot.caption && (
+                    <figcaption class="p-4 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                      {screenshot.caption}
+                    </figcaption>
+                  )}
+                </figure>
+              ))}
+            </div>
+          </section>
+        )
+      }
+
       <div class="mt-8 prose-content">
         <Content />
       </div>

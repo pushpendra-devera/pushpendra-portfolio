@@ -1,0 +1,45 @@
+---
+title: "Hide platform-specific media behavior behind one mobile interface"
+slug: "cross-platform-media-boundary"
+summary: "A React Native media product benefits from a shared playback contract even when Android and iOS require different native behavior."
+publishDate: "2026-08-18"
+tags: ["React Native", "Media", "iOS", "Android"]
+status: "published"
+visibility: "public"
+noindex: false
+sourceProject: "localvodsaudi"
+---
+
+Cross-platform media work is rarely identical on Android and iOS. Audio focus,
+background behavior, interruption events, native player capabilities, and
+system controls can differ even when the product design expects one playback
+experience.
+
+## Give the product one contract
+
+Screens should not need to know every platform rule. A shared playback layer
+can expose product-level operations such as load, play, pause, seek, stop, and
+observe progress. Platform-specific modules then translate those operations
+into the native behavior each operating system requires.
+
+This keeps profile, recommendation, notification, video, and podcast workflows
+from accumulating scattered `Platform.OS` branches.
+
+## Model interruptions explicitly
+
+Playback state is affected by more than taps inside the app. Phone calls,
+headset changes, backgrounding, another audio application, and network loss can
+all interrupt a session. The shared layer should return those events to the UI
+as explicit state transitions instead of leaving a screen to guess why media
+stopped.
+
+## Keep the evidence boundary clear
+
+This note is drawn from documented prior LocalVodSaudi feature work. The source
+repository and release records are not available in the portfolio workspace,
+so it describes the engineering boundary without claiming a particular native
+library, audience size, uptime figure, or current production status.
+
+The durable lesson is architectural: keep the product-facing media API stable,
+isolate native differences, and make interruption behavior part of the state
+model rather than an afterthought.
