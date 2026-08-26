@@ -87,10 +87,12 @@ const repositoryVisibilityLabel: Record<string, string> = {
       >
         {d.title}
       </h1>
-      <p class="mt-2 text-lg text-gray-600 dark:text-gray-400">{d.summary}</p>
+      <p class="font-plex-sans mt-2 text-lg text-gray-600 dark:text-gray-400">
+        {d.summary}
+      </p>
       <div class="mt-4 flex flex-wrap items-center gap-2">
         <span
-          class="glass-pill rounded-full px-3 py-1 text-xs font-medium text-gray-700 dark:text-gray-300"
+          class="surface-card rounded-full px-3 py-1 text-xs font-medium text-gray-700 dark:text-gray-300"
         >
           {projectStatusLabel[d.status] ?? d.status}
         </span>
@@ -127,7 +129,7 @@ const repositoryVisibilityLabel: Record<string, string> = {
         d.stats && d.stats.length > 0 && (
           <div class="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4">
             {d.stats.map((stat) => (
-              <div class="glass-card rounded-2xl p-4 text-center">
+              <div class="surface-card rounded-2xl p-4 text-center">
                 <div
                   class="text-2xl sm:text-3xl font-bold"
                   style="color: var(--site-accent)"
@@ -147,7 +149,7 @@ const repositoryVisibilityLabel: Record<string, string> = {
         d.stack && d.stack.length > 0 && (
           <div class="mt-8 flex flex-wrap gap-2">
             {d.stack.map((item) => (
-              <span class="glass-pill px-3 py-1 text-gray-800 dark:text-gray-200 rounded-full text-sm font-medium">
+              <span class="surface-card px-3 py-1 text-gray-800 dark:text-gray-200 rounded-full text-sm font-medium">
                 {item}
               </span>
             ))}
@@ -210,7 +212,7 @@ const repositoryVisibilityLabel: Record<string, string> = {
             </h2>
             <div class="mt-4 space-y-4">
               {d.decisions.map((decision) => (
-                <div class="glass-card rounded-2xl p-4 sm:p-5">
+                <div class="surface-card rounded-2xl p-4 sm:p-5">
                   <h3 class="font-semibold text-gray-900 dark:text-gray-50">
                     {decision.decision}
                   </h3>
@@ -252,7 +254,7 @@ const repositoryVisibilityLabel: Record<string, string> = {
                     <span class="font-medium text-gray-900 dark:text-gray-50">
                       {control.name}
                     </span>
-                    <span class="glass-pill text-xs font-medium px-2 py-0.5 rounded-full text-gray-700 dark:text-gray-300">
+                    <span class="surface-card text-xs font-medium px-2 py-0.5 rounded-full text-gray-700 dark:text-gray-300">
                       {controlStatusLabel[control.status] ?? control.status}
                     </span>
                   </div>
@@ -281,7 +283,7 @@ const repositoryVisibilityLabel: Record<string, string> = {
                     <span class="font-medium text-gray-900 dark:text-gray-50">
                       {control.name}
                     </span>
-                    <span class="glass-pill text-xs font-medium px-2 py-0.5 rounded-full text-gray-700 dark:text-gray-300">
+                    <span class="surface-card text-xs font-medium px-2 py-0.5 rounded-full text-gray-700 dark:text-gray-300">
                       {controlStatusLabel[control.status] ?? control.status}
                     </span>
                   </div>

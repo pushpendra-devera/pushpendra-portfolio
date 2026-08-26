@@ -89,7 +89,7 @@ const sourceLabel: Record<string, string> = {
           Projects with the tradeoffs left in.
         </h1>
         <p
-          class="mt-5 text-lg leading-relaxed text-gray-600 dark:text-gray-400"
+          class="font-plex-sans mt-5 text-lg leading-relaxed text-gray-600 dark:text-gray-400"
         >
           Production mobile work, independently shipped products, and focused
           prototypes—documented from the code itself. Private repositories are
@@ -122,10 +122,10 @@ const sourceLabel: Record<string, string> = {
               <li class="h-full">
                 <a
                   href={`/projects/${entry.data.slug}`}
-                  class="group glass-card rounded-2xl p-6 h-full flex flex-col transition-transform duration-300 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gray-900 dark:focus-visible:outline-gray-100"
+                  class="group surface-card rounded-2xl p-6 h-full flex flex-col transition-transform duration-300 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gray-900 dark:focus-visible:outline-gray-100"
                 >
                   <div class="flex flex-wrap items-center gap-2 text-xs font-medium text-gray-600 dark:text-gray-400">
-                    <span class="glass-pill rounded-full px-2.5 py-1">
+                    <span class="surface-card rounded-full px-2.5 py-1">
                       {statusLabel[entry.data.status] ?? entry.data.status}
                     </span>
                     {entry.data.repositoryVisibility && (
@@ -181,14 +181,14 @@ const sourceLabel: Record<string, string> = {
                 <li>
                   <a
                     href={`/projects/${entry.data.slug}`}
-                    class="group glass-card rounded-2xl p-5 sm:p-6 grid gap-4 sm:grid-cols-[1fr_auto] sm:items-center transition-transform duration-300 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gray-900 dark:focus-visible:outline-gray-100"
+                    class="group surface-card rounded-2xl p-5 sm:p-6 grid gap-4 sm:grid-cols-[1fr_auto] sm:items-center transition-transform duration-300 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gray-900 dark:focus-visible:outline-gray-100"
                   >
                     <div>
                       <div class="flex flex-wrap items-center gap-2">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-50 group-hover:underline underline-offset-4">
                           {entry.data.title}
                         </h3>
-                        <span class="glass-pill rounded-full px-2.5 py-1 text-xs text-gray-600 dark:text-gray-400">
+                        <span class="surface-card rounded-full px-2.5 py-1 text-xs text-gray-600 dark:text-gray-400">
                           {statusLabel[entry.data.status] ?? entry.data.status}
                         </span>
                       </div>

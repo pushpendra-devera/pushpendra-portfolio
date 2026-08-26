@@ -65,7 +65,7 @@ const entries = (
       >
         Notes
       </h1>
-      <p class="mt-2 text-gray-600 dark:text-gray-400">
+      <p class="font-plex-sans mt-2 text-gray-600 dark:text-gray-400">
         Short, focused technical write-ups &mdash; separate from the full case
         studies in{" "}
         <a href="/projects" class="underline underline-offset-4"> Projects </a>
@@ -84,7 +84,7 @@ const entries = (
             <li>
               <a
                 href={`/notes/${entry.data.slug}`}
-                class="group block glass-card rounded-2xl p-5 sm:p-6 transition-transform duration-300 hover:-translate-y-1"
+                class="group block surface-card rounded-2xl p-5 sm:p-6 transition-transform duration-300 hover:-translate-y-1"
               >
                 <p class="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wide">
                   {new Date(entry.data.publishDate).toLocaleDateString(
@@ -101,7 +101,7 @@ const entries = (
                 {entry.data.tags && entry.data.tags.length > 0 && (
                   <div class="mt-3 flex flex-wrap gap-2">
                     {entry.data.tags.map((tag) => (
-                      <span class="glass-pill px-2.5 py-1 rounded-full text-xs font-medium text-gray-700 dark:text-gray-300">
+                      <span class="surface-card px-2.5 py-1 rounded-full text-xs font-medium text-gray-700 dark:text-gray-300">
                         {tag}
                       </span>
                     ))}

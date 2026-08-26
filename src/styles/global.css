@@ -4,6 +4,11 @@
 
 :root {
   color-scheme: light dark;
+  /* Constant across both themes: used only where white text sits on top
+     (filled buttons, badges). --site-accent itself is too light in dark
+     mode (#e0824a) to give white text 4.5:1 contrast, so text-on-accent
+     surfaces use this darker, theme-invariant shade instead. */
+  --site-accent-solid: #a8531f;
 }
 
 /* Overrides the per-page light-mode --site-accent (set inline from
@@ -21,41 +26,6 @@ body {
 
 .dark body {
   background-color: #111827;
-}
-
-/* ---- Glassmorphism design system ---- */
-
-/* Opacity here is deliberately high (not "true" 50%-ish glass) so that
-   text sitting on top keeps WCAG-safe contrast regardless of which part
-   of a gradient-blob happens to be underneath a given card. Verified
-   against axe color-contrast checks in tests/dark-mode.spec.ts and
-   tests/notes.spec.ts. */
-.glass-card {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 0 8px 32px rgba(17, 24, 39, 0.06);
-}
-
-.dark .glass-card {
-  background: rgba(17, 24, 39, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-}
-
-.glass-pill {
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 0 4px 24px rgba(17, 24, 39, 0.08);
-}
-
-.dark .glass-pill {
-  background: rgba(17, 24, 39, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
 }
 
 /* ---- Refined surface system (Hero / Featured Projects) ----
@@ -108,7 +78,7 @@ body {
 }
 
 .btn-accent {
-  background: var(--site-accent);
+  background: var(--site-accent-solid);
   color: #ffffff;
 }
 
@@ -135,14 +105,17 @@ body {
 
 .prose-content p {
   @apply text-gray-600 dark:text-gray-400 leading-relaxed mb-4;
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
 }
 
 .prose-content ul {
   @apply list-disc list-inside text-gray-600 dark:text-gray-400 space-y-1 mb-4;
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
 }
 
 .prose-content ol {
   @apply list-decimal list-inside text-gray-600 dark:text-gray-400 space-y-1 mb-4;
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
 }
 
 .prose-content strong {
