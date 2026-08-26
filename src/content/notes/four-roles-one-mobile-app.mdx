@@ -1,0 +1,46 @@
+---
+title: "Four roles, one mobile app: make navigation boundaries explicit"
+slug: "four-roles-one-mobile-app"
+summary: "A multi-role marketplace stays understandable when each role owns a navigation model while authentication and platform services remain shared."
+publishDate: "2026-08-25"
+tags: ["React Native", "Navigation", "Architecture"]
+status: "published"
+visibility: "public"
+noindex: false
+sourceProject: "fashion-aggregator"
+---
+
+A marketplace for buyers, sellers, stylists, and delivery partners is not one
+workflow with four labels. Each role has a different home screen, different
+primary actions, different permissions, and a different idea of what belongs
+in the bottom tab bar.
+
+## Share services, not journeys
+
+The useful boundary is to keep cross-cutting platform concerns shared while
+letting each role own its navigation hierarchy. Authentication, profile data,
+notifications, localization, network state, and reusable UI can remain common.
+Buyer discovery, seller operations, stylist collaboration, and delivery work
+should not be forced through one oversized route tree.
+
+In FashionAggregator, the mobile root composes separate tab and stack
+navigators for the four roles. That keeps a seller's catalogue and order tools
+out of the buyer journey, while still allowing both sides to use the same
+identity and communication services.
+
+## Role is also a layout decision
+
+English and Arabic support adds another dimension. Right-to-left behavior is
+not solved by translating strings. Row direction, icon orientation, margins,
+alignment, and navigation affordances all need shared RTL-aware helpers so the
+same role workflow remains coherent in both languages.
+
+## The tradeoff
+
+Multiple route trees create more files and more explicit wiring. That is a
+reasonable cost. The alternative is conditional navigation scattered across
+screens: if buyer, show this; if seller, hide that; if stylist, redirect
+somewhere else. Those conditions become hard to audit as the product grows.
+
+The scalable rule is simple: share capabilities that are truly common, but
+give materially different users their own product-shaped navigation boundary.

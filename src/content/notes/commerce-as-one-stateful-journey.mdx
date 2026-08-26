@@ -1,0 +1,47 @@
+---
+title: "Treat mobile commerce as one stateful journey"
+slug: "commerce-as-one-stateful-journey"
+summary: "Search, filtering, cart, checkout, and payment should share explicit ownership rules so state does not drift between screens."
+publishDate: "2026-08-17"
+tags: ["React Native", "Commerce", "State management"]
+status: "published"
+visibility: "public"
+noindex: false
+sourceProject: "seedcard"
+---
+
+A commerce application is often divided into screens: catalogue, search,
+filters, product detail, cart, checkout, and payment. The customer experiences
+those screens as one journey, so the state model has to connect them.
+
+## Decide who owns each state
+
+Search input and temporary filter controls can remain local until the user
+applies them. Cart contents need a longer-lived owner because they must survive
+navigation and remain consistent across product detail, cart, and checkout.
+Checkout should consume a validated snapshot of the cart rather than rebuild
+prices and quantities independently.
+
+Payment state has a separate lifecycle: ready, processing, succeeded,
+cancelled, or failed. A screen should not infer success merely because a native
+payment view closed.
+
+## Multilingual UI changes layout
+
+Language support also affects the journey beyond translated labels. Text
+length, alignment, direction, and validation messages can change the space
+available for product information and checkout actions. Reusable components
+need to tolerate those changes without giving different languages different
+business behavior.
+
+## Document only what is supported
+
+This note is based on documented SeedCard work covering search and filtering,
+multilingual UI, cart management, checkout, and Stripe integration. The source
+and transaction records are not available in this portfolio workspace, so it
+does not claim a transaction volume, payment success rate, or current release
+status.
+
+The engineering principle is independent of those metrics: define ownership
+for discovery, cart, checkout, and payment state, and make every payment exit
+path explicit.

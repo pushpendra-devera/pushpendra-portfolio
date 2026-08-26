@@ -1,0 +1,49 @@
+---
+title: "Mobile checkout should begin with a server-created payment session"
+slug: "server-created-payment-checkout"
+summary: "A native payment SDK can own the checkout UI while merchant credentials and checkout-session creation remain behind a backend boundary."
+publishDate: "2026-08-23"
+tags: ["Android", "Payments", "Security"]
+status: "published"
+visibility: "public"
+noindex: false
+sourceProject: "peachpay-android-integration"
+---
+
+A payment SDK running inside an Android app needs enough information to open a
+checkout, but it should not receive the merchant credentials used to create
+that checkout. Those credentials belong on a server.
+
+## Split the flow at the checkout ID
+
+The archived Peach Payments integration demonstrates a useful boundary:
+
+1. The host app supplies non-secret transaction parameters such as amount,
+   currency, and transaction type.
+2. A backend authenticated as the merchant creates a checkout session.
+3. The app receives the resulting checkout ID, not the merchant credential.
+4. The native SDK uses that ID to present card or SEPA payment UI and complete
+   3-D Secure when required.
+
+This keeps the mobile bundle out of the merchant-authentication path while
+still allowing a native checkout experience.
+
+## Completion is not one boolean
+
+Payment activities can return synchronously, continue asynchronously, be
+cancelled by the user, or fail before reaching the provider. A wrapper should
+translate each path into an explicit host-app result. Treating everything as
+success or generic failure makes retry behavior and customer messaging harder
+to reason about.
+
+## Archived code still needs scrutiny
+
+The reviewed repository uses an old SDK and contains a live-mode conditional
+defect, so it is not a current implementation recommendation. Its value is the
+integration boundary: merchant credentials stay server-side, the client works
+with a short-lived checkout identifier, and every completion path is returned
+to the calling application.
+
+Payment code ages quickly. Preserve the architectural boundary, then implement
+it against the current provider SDK and verify current compliance requirements
+before shipping.

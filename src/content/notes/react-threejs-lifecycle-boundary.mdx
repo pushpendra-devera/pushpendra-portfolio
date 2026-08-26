@@ -1,0 +1,47 @@
+---
+title: "React owns state; Three.js owns a lifecycle"
+slug: "react-threejs-lifecycle-boundary"
+summary: "A WebGL scene can reflect React state, but renderers, animation frames, geometries, and materials need a lifecycle that survives state changes cleanly."
+publishDate: "2026-08-19"
+tags: ["React", "Three.js", "WebGL"]
+status: "published"
+visibility: "public"
+noindex: false
+sourceProject: "webgl-theme-experiment"
+---
+
+React is declarative: state changes, then the UI is described again. Three.js
+is imperative: create a renderer, scene, camera, meshes, and an animation loop,
+then mutate them over time. Combining the two works best when each system owns
+the part it is designed for.
+
+## Keep scene objects stable
+
+A theme toggle only needs to change scene properties such as background,
+visibility, rotation targets, or material opacity. It should not need to create
+a new renderer every time the theme changes.
+
+A stable scene can be created once when the component mounts. React state can
+then update references to those objects. This avoids replacing the canvas,
+duplicating event listeners, or starting multiple animation loops.
+
+## Cleanup is part of correctness
+
+Imperative resources do not disappear just because a React component rerenders.
+A robust integration should:
+
+- Cancel the active animation frame.
+- Remove resize and pointer listeners.
+- Dispose geometries and materials.
+- Dispose the renderer and detach its canvas when the component unmounts.
+- Resize from the container rather than assuming a fixed canvas dimension.
+
+## Why the experiment is still useful
+
+The sun/moon prototype demonstrates the central interaction: React theme state
+drives a Three.js scene while the render loop interpolates between two visual
+states. Its limitations show the next engineering step clearly.
+
+The pattern scales when React owns product state and component lifetime, while
+Three.js owns stable scene objects and frame-by-frame rendering inside that
+lifetime.

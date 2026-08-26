@@ -34,6 +34,8 @@ const pages = [
     path: "/projects/webgl-theme-experiment",
     name: "projects-webgl-theme-experiment",
   },
+  { path: "/projects/localvodsaudi", name: "projects-localvodsaudi" },
+  { path: "/projects/seedcard", name: "projects-seedcard" },
 ];
 
 for (const { path, name } of pages) {

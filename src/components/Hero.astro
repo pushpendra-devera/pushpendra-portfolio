@@ -2,6 +2,11 @@
 import { createAvatar } from "@dicebear/core";
 import { notionists } from "@dicebear/collection";
 import { siteConfig } from "../config";
+import {
+  formatExperienceCompact,
+  formatExperienceLong,
+  getExperienceDuration,
+} from "../utils/experience";
 
 // Deterministic abstract avatar (MIT/CC0-licensed generator, no real photo
 // or likeness) generated at build time from the site owner's name as seed.
@@ -10,8 +15,9 @@ const avatarSvg = createAvatar(notionists, {
   backgroundColor: ["transparent"],
 }).toString();
 
-// "4.6 years of experience" is the figure stated in the resume summary.
-const yearsExperience = "4.6+";
+const experienceDuration = getExperienceDuration(siteConfig.careerStartDate);
+const experienceCompact = formatExperienceCompact(experienceDuration);
+const experienceLong = formatExperienceLong(experienceDuration);
 ---
 
 <div id="hero" class="relative py-32 md:min-h-screen flex items-center">
@@ -29,13 +35,16 @@ const yearsExperience = "4.6+";
           <span
             class="text-lg sm:text-xl font-bold"
             style="color: var(--site-accent)"
+            data-experience-counter
+            data-career-start={siteConfig.careerStartDate}
+            aria-label={`${experienceLong} of professional experience`}
           >
-            {yearsExperience}
+            {experienceCompact}
           </span>
           <span
             class="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wide whitespace-nowrap"
           >
-            Years Exp.
+            Experience
           </span>
         </div>
       </div>
@@ -170,6 +179,28 @@ const yearsExperience = "4.6+";
     </div>
   </div>
 </div>
+
+<script>
+  import {
+    formatExperienceCompact,
+    formatExperienceLong,
+    getExperienceDuration,
+  } from "../utils/experience";
+
+  const counter = document.querySelector<HTMLElement>(
+    "[data-experience-counter]",
+  );
+  const careerStart = counter?.dataset.careerStart;
+
+  if (counter && careerStart) {
+    const duration = getExperienceDuration(careerStart);
+    counter.textContent = formatExperienceCompact(duration);
+    counter.setAttribute(
+      "aria-label",
+      `${formatExperienceLong(duration)} of professional experience`,
+    );
+  }
+</script>
 
 <style>
   @keyframes fadeIn {
