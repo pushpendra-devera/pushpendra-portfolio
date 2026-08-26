@@ -36,7 +36,7 @@ export const siteConfig: SiteConfig = {
   title: "React Native Developer | Software Engineer",
   description:
     "Portfolio of Pushpendra Singh, a React Native Developer and Software Engineer with 4.6+ years of experience building production mobile applications for Android and iOS.",
-  accentColor: "#111827",
+  accentColor: "#a8531f",
   resumeUrl: "/Pushpendra-Singh-Resume.pdf",
   social: {
     email: "pushpendra.devera@gmail.com",

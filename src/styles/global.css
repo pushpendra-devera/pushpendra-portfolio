@@ -11,7 +11,7 @@
    background. !important is required here: it must beat the inline style
    that sets the light-mode value on the same element. */
 .dark {
-  --site-accent: #e5e7eb !important;
+  --site-accent: #e0824a !important;
 }
 
 body {
@@ -56,6 +56,64 @@ body {
   background: rgba(17, 24, 39, 0.8);
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* ---- Refined surface system (Hero / Featured Projects) ----
+   Crisp bordered panels + a subtle dot texture, replacing the blurred
+   gradient blobs in these two sections specifically (blob gradients read
+   as a generic AI-default choice; kept elsewhere on the page for now). */
+.surface-card {
+  background: #ffffff;
+  border: 1px solid #e4dfd3;
+}
+
+.dark .surface-card {
+  background: #1a1816;
+  border-color: #2b2823;
+}
+
+.dot-grid {
+  background-image: radial-gradient(circle, rgba(23, 20, 15, 0.06) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+.dark .dot-grid {
+  background-image: radial-gradient(
+    circle,
+    rgba(242, 239, 232, 0.05) 1px,
+    transparent 1px
+  );
+}
+
+.chip-neutral {
+  background: #f7f5f1;
+  border: 1px solid #e4dfd3;
+  color: #55503f;
+}
+
+.dark .chip-neutral {
+  background: #201e1a;
+  border-color: #2b2823;
+  color: #b8b2a2;
+}
+
+.chip-accent {
+  background: color-mix(in srgb, var(--site-accent) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--site-accent) 30%, transparent);
+  color: var(--site-accent);
+}
+
+.font-plex-sans {
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+}
+
+.btn-accent {
+  background: var(--site-accent);
+  color: #ffffff;
+}
+
+.btn-accent:hover {
+  opacity: 0.88;
 }
 
 /* Soft blurred gradient blobs used as ambient page background (BackgroundBlobs.astro) */
