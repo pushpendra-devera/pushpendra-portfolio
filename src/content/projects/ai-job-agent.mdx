@@ -12,7 +12,7 @@ role: "Sole developer (166 of the reviewed commits are attributed to Pushpendra 
 teamSize: "Solo"
 repositoryVisibility: "private"
 constraints:
-  - "Local-first, single-user operation — no server, no hosted database, no multi-tenant concerns"
+  - "Local-first, single-user operation: no server, no hosted database, no multi-tenant concerns"
   - "No automatic application submission under any circumstance"
   - "Multiple ATS platforms (Greenhouse, Lever, Ashby, SmartRecruiters, Jobvite, Naukri) with different DOM structures and form widgets"
   - "Untrusted job-description text must be treated as data, not instructions, to resist prompt injection"
@@ -44,7 +44,7 @@ stats:
     value: "6"
   - label: "Scoring categories"
     value: "9"
-architecture: "The core is a resumable LangGraph state machine backed by SQLite: discover -> canonicalize -> dedupe -> score -> select -> tailor -> human review interrupt -> persist -> prepare -> assisted apply -> human confirmation. LangGraph is used for durable checkpointing and interruption, not as a wrapper around every model call — model calls go through an application-owned provider abstraction over native Anthropic/OpenAI/NVIDIA-NIM SDKs, keeping scoring weights, safety rules, and state transitions in deterministic application code. Fit scoring mixes four model-judged categories (required skills, tech stack, experience level, preferred skills) with five deterministic ones (seniority, location, remote preference, employment type, salary); the model never sees the category weights, and missing categories are removed with weights renormalized rather than penalizing a posting for omitting a field. The Electron desktop app splits a sandboxed React renderer (no Node.js, filesystem, or secrets access), a narrow typed preload bridge, Electron main, and isolated utility worker processes for the agent host, run execution, assisted-apply sessions, and Naukri login/handoff — so a crash or cancellation in one worker doesn't take down the shell. Application status transitions run through a centralized state machine where 'submitted' is terminal and reachable only via explicit human confirmation, and applicant profile/resume data is content-addressed so an edited resume can't be uploaded under an earlier approval."
+architecture: "The core is a resumable LangGraph state machine backed by SQLite: discover -> canonicalize -> dedupe -> score -> select -> tailor -> human review interrupt -> persist -> prepare -> assisted apply -> human confirmation. LangGraph is used for durable checkpointing and interruption, not as a wrapper around every model call: model calls go through an application-owned provider abstraction over native Anthropic/OpenAI/NVIDIA-NIM SDKs, keeping scoring weights, safety rules, and state transitions in deterministic application code. Fit scoring mixes four model-judged categories (required skills, tech stack, experience level, preferred skills) with five deterministic ones (seniority, location, remote preference, employment type, salary); the model never sees the category weights, and missing categories are removed with weights renormalized rather than penalizing a posting for omitting a field. The Electron desktop app splits a sandboxed React renderer (no Node.js, filesystem, or secrets access), a narrow typed preload bridge, Electron main, and isolated utility worker processes for the agent host, run execution, assisted-apply sessions, and Naukri login/handoff, so a crash or cancellation in one worker doesn't take down the shell. Application status transitions run through a centralized state machine where 'submitted' is terminal and reachable only via explicit human confirmation, and applicant profile/resume data is content-addressed so an edited resume can't be uploaded under an earlier approval."
 workflow:
   - "Discover job postings from configured ATS boards, or import a supported posting explicitly."
   - "Canonicalize and persist every discovered posting with provenance."
@@ -54,24 +54,24 @@ workflow:
   - "Pause at a review gate by default and persist the checkpoint so the process can exit safely."
   - "After approval, create artifacts and move the application to ready_to_submit."
   - "Open supported application forms, fill fields that can be verified, upload the applicant's existing resume, and hand control to the applicant."
-  - "Never click Submit — a separate confirmation action records a submission only after the applicant says it occurred."
+  - "Never click Submit: a separate confirmation action records a submission only after the applicant says it occurred."
 decisions:
   - decision: "SQLite instead of a hosted database"
     problem: "The application is intentionally single-user and local"
     chosenApproach: "SQLite avoids a database daemon, connection pool, container, or remote data store, while Drizzle migrations keep an upgrade path"
   - decision: "Deterministic rules where judgment is unnecessary"
     problem: "Not every decision needs a language model, and every model call is a place for drift and cost"
-    chosenApproach: "Salary thresholds, location, remote preference, employment type, retry limits, application states, destination validation, and question-deny rules are application code, not model decisions — models are reserved for reading-comprehension and drafting tasks"
+    chosenApproach: "Salary thresholds, location, remote preference, employment type, retry limits, application states, destination validation, and question-deny rules are application code, not model decisions: models are reserved for reading-comprehension and drafting tasks"
   - decision: "Reorder and re-emphasize, never invent"
     problem: "Tailoring needs to make a resume more relevant without misrepresenting the applicant"
     chosenApproach: "Tailoring can rewrite a summary, reorder declared skills, and rank existing experience highlights, but cannot add unclaimed experience or technology; enforcement combines prompt instructions, deterministic term comparison, and a second grounding review"
     evidence: "Grounding failures become visible warnings and lower confidence rather than being silently auto-corrected with another generative pass"
   - decision: "Human-controlled submission"
     problem: "An irreversible action (submitting an application) should not be delegated to an uncertain model/browser workflow"
-    chosenApproach: "ATS adapters intentionally have no submit method — ApplyResult.submitted is typed as the literal false. Assisted mode opens a visible browser, fills what it can, verifies values at the end, and stops for the applicant"
+    chosenApproach: "ATS adapters intentionally have no submit method: ApplyResult.submitted is typed as the literal false. Assisted mode opens a visible browser, fills what it can, verifies values at the end, and stops for the applicant"
   - decision: "Explicit capability evidence per platform"
     problem: "Not every ATS integration has been proven the same way"
-    chosenApproach: "The source distinguishes discovery, signed-in-session support, adapter routing, form filling, and live-validated filling — a platform with implemented filling but no successful live validation is labelled experimental rather than presented as fully supported"
+    chosenApproach: "The source distinguishes discovery, signed-in-session support, adapter routing, form filling, and live-validated filling: a platform with implemented filling but no successful live validation is labelled experimental rather than presented as fully supported"
 safetyControls:
   - name: "Human review before submission"
     status: "implemented"
@@ -121,7 +121,7 @@ privacyControls:
     detail: "A path-based logger denylist redacts sensitive fields, and a second sanitizer strips credential-shaped strings, emails, phone numbers, and filesystem paths from persistent error messages; diagnostics exports get an independent third redaction pass"
   - name: "Documented sensitive-data inventory"
     status: "implemented"
-    detail: "The project explicitly documents where sensitive data can live (profile, app database, checkpoint database, generated cover letters, form screenshots, the Naukri browser profile) rather than claiming 'local' means risk-free — filled-form screenshots are identified as the densest PII artifact"
+    detail: "The project explicitly documents where sensitive data can live (profile, app database, checkpoint database, generated cover letters, form screenshots, the Naukri browser profile) rather than claiming 'local' means risk-free; filled-form screenshots are identified as the densest PII artifact"
   - name: "Restrictive local file permissions"
     status: "implemented"
     detail: "Sensitive directories/files use owner-only permissions (0700/0600) on POSIX systems; Windows permission changes are best-effort, and diagnostics report actual state rather than assumed state"
@@ -152,21 +152,21 @@ evidence:
   - "1,493 backend tests + 1,504 desktop tests = 2,997 total passing, 15 skipped, verified via the project's own pnpm check gate"
 limitations:
   - "The project is beta (1.0.0-beta.2) and was unreleased at the reviewed revision"
-  - "Closing an assisted browser does not prove an application was submitted — explicit confirmation is still required"
+  - "Closing an assisted browser does not prove an application was submitted: explicit confirmation is still required"
   - "SmartRecruiters and Jobvite form filling is implemented but not live-validated, and is labelled experimental accordingly"
   - "Form automation is inherently fragile as ATS markup and widgets change over time"
-  - "The privacy model is local-first, not encrypted-everywhere — the local data inventory still depends on device security and retention discipline"
+  - "The privacy model is local-first, not encrypted-everywhere: the local data inventory still depends on device security and retention discipline"
   - "Filled-form screenshots contain substantial PII and are retained until the user runs purge"
   - "POSIX owner-only permission guarantees don't map directly to Windows, where security depends on the user profile and filesystem ACLs"
   - "Redaction is best-effort and denylist-based, not a mathematical guarantee"
-  - "The root quality-gate command doesn't itself launch the Electron E2E suite — that's a separate command/job"
+  - "The root quality-gate command doesn't itself launch the Electron E2E suite: that's a separate command/job"
   - "Desktop installers are unsigned and not publicly distributed"
   - "No local Ollama provider is integrated in the reviewed source; supported providers are Anthropic, OpenAI, and NVIDIA hosted NIM"
   - "No scheduler or continuous background discovery exists"
-  - "No automatic resume-document generation exists — the existing resume is uploaded unchanged"
+  - "No automatic resume-document generation exists: the existing resume is uploaded unchanged"
   - "Supported ATS coverage is intentionally limited to six platforms"
 lessons:
-  - "Dependable agent software comes from explicit boundaries, not a stronger prompt — the controls that mattered most were ordinary engineering: typed state transitions, deterministic policy, process isolation, URL allowlists, provenance tracking, bounded retries, post-action verification, adversarial tests, conservative capability labeling, and a human decision at the one genuinely irreversible step"
+  - "Dependable agent software comes from explicit boundaries, not a stronger prompt; the controls that mattered most were ordinary engineering: typed state transitions, deterministic policy, process isolation, URL allowlists, provenance tracking, bounded retries, post-action verification, adversarial tests, conservative capability labeling, and a human decision at the one genuinely irreversible step"
 ---
 
 ## Overview
@@ -180,13 +180,13 @@ Submit myself, and confirm the outcome separately.
 
 ## Problem
 
-Job searching involves a lot of repetitive, lower-judgment work — finding
+Job searching involves a lot of repetitive, lower-judgment work: finding
 postings across scattered ATS boards, comparing them against a profile, and
 filling the same categories of form fields over and over. None of that requires
 a human in the moment. But a few steps genuinely do: deciding whether a claim on
 a resume is accurate, answering legally consequential or demographic questions,
 and clicking Submit. The design goal was to automate the first category
-aggressively and keep the second category strictly out of the agent's hands —
+aggressively and keep the second category strictly out of the agent's hands,
 not as a policy statement, but as things the code is structurally incapable of
 doing (no submit method exists on any ATS adapter; demographic questions are
 never auto-answered).
@@ -198,7 +198,7 @@ revision `6c467f7` (17 August 2026), not on unverified claims. The review
 distinguishes implemented, experimentally implemented (not yet live-validated),
 and deliberately-not-implemented functionality throughout, and that distinction
 is preserved here rather than flattened. Job-search outcomes (interviews, offers,
-time saved) are intentionally not claimed anywhere on this page — the "Verified
+time saved) are intentionally not claimed anywhere on this page. The "Verified
 outcomes" section above lists only engineering results with direct evidence
 (test runs, caught regressions, documented before/after field-verification
 counts), not employment results, since none have been separately verified._

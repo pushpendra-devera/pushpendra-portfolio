@@ -22,10 +22,7 @@ const currentCompany = siteConfig.experience?.[0]?.company;
 const coreSkills = siteConfig.skills.slice(0, 4);
 ---
 
-<div
-  id="hero"
-  class="relative dot-grid pt-36 pb-24 sm:pt-52 sm:pb-32 xl:pt-40"
->
+<div id="hero" class="relative dot-grid pt-36 pb-24 sm:pt-52 sm:pb-32 xl:pt-40">
   <div class="w-full mx-auto px-6 sm:px-12 md:px-16 max-w-5xl">
     <div
       class="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-10 lg:gap-14 items-start"
@@ -48,13 +45,13 @@ const coreSkills = siteConfig.skills.slice(0, 4);
         <p
           class="font-plex-sans mt-5 text-pretty text-base sm:text-lg leading-relaxed text-gray-600 dark:text-gray-400 max-w-xl"
         >
-          I build production mobile apps for Android and iOS &mdash; {
+          I build production mobile apps for Android and iOS: {
             experienceCompact
           } in React Native and TypeScript. Currently shipping <span
-            class="text-gray-900 dark:text-gray-100 font-semibold"
-            >Dallal</span
-          >, a bilingual real-estate marketplace live in Kuwait with 75+ screens,
-          in-app calling, and full App Store &amp; Play release pipelines.
+            class="text-gray-900 dark:text-gray-100 font-semibold">Dallal</span
+          >, a bilingual real-estate marketplace live in Kuwait with 75+
+          screens, in-app calling, and full App Store &amp; Play release
+          pipelines.
         </p>
 
         <div class="mt-8 flex flex-wrap items-center gap-3 sm:gap-4">
@@ -63,7 +60,7 @@ const coreSkills = siteConfig.skills.slice(0, 4);
               <a
                 href={siteConfig.resumeUrl}
                 download
-                class="btn-accent inline-flex items-center gap-2 rounded px-5 py-3 text-sm font-semibold transition-opacity"
+                class="btn-accent inline-flex items-center gap-2 rounded px-5 py-3 text-sm font-semibold transition-colors"
               >
                 Download Resume
               </a>

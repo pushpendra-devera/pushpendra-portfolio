@@ -3,7 +3,6 @@ import { getCollection } from "astro:content";
 import Header from "../../components/Header.astro";
 import Footer from "../../components/Footer.astro";
 import ThemeScript from "../../components/ThemeScript.astro";
-import BackgroundBlobs from "../../components/BackgroundBlobs.astro";
 import { siteConfig } from "../../config";
 import "../../styles/global.css";
 
@@ -57,7 +56,6 @@ const entries = (
     <meta name="twitter:image" content={new URL("og-image.png", Astro.site)} />
   </head>
   <body>
-    <BackgroundBlobs />
     <Header />
     <main class="max-w-3xl mx-auto px-6 pt-28 pb-16 sm:pt-32 sm:pb-24">
       <h1
@@ -66,8 +64,8 @@ const entries = (
         Notes
       </h1>
       <p class="font-plex-sans mt-2 text-gray-600 dark:text-gray-400">
-        Short, focused technical write-ups &mdash; separate from the full case
-        studies in{" "}
+        Short, focused technical write-ups, separate from the full case studies
+        in{" "}
         <a href="/projects" class="underline underline-offset-4"> Projects </a>
         .
       </p>

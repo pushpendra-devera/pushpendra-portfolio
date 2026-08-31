@@ -12,7 +12,7 @@ sourceProject: "dallal-real-estate-marketplace"
 
 On the Dallal Real Estate Marketplace app, the REST API surface grew past 100
 endpoints over the course of the project. Property search, listings, chat,
-calling, verification, maps, analytics — each area added its own set of
+calling, verification, maps, analytics: each area added its own set of
 calls. The question that mattered wasn't "how do we call this endpoint,"
 it was "how do we make sure every endpoint behaves the same way when auth
 goes stale."
@@ -24,7 +24,7 @@ If every screen or hook manages its own token attachment and its own
 
 - Behavior drifts. One screen retries once, another doesn't retry at all,
   a third silently fails. None of that is a decision anyone made on
-  purpose — it's just what happens when the same problem gets solved N
+  purpose. It's just what happens when the same problem gets solved N
   times by N different people (or N different times by the same person).
 - Debugging an auth issue means checking every call site, not one place.
 
@@ -33,13 +33,13 @@ If every screen or hook manages its own token attachment and its own
 The fix was a single Axios instance that every API call goes through,
 with interceptors handling three things:
 
-- **Token injection** — attach the current JWT to every outgoing request
+- **Token injection**: attach the current JWT to every outgoing request
   automatically, so call sites never think about auth at all.
-- **401 refresh-and-retry** — when a request comes back unauthorized, the
+- **401 refresh-and-retry**: when a request comes back unauthorized, the
   interceptor pauses, refreshes the token, and retries the original
   request transparently. The calling code sees a successful response or a
   real error, never a raw 401.
-- **Request cancellation** — in-flight requests get cancelled cleanly on
+- **Request cancellation**: in-flight requests get cancelled cleanly on
   navigation or unmount, so a slow response from a screen the user already
   left doesn't land somewhere it shouldn't.
 
@@ -47,7 +47,7 @@ with interceptors handling three things:
 
 The real test of this pattern wasn't the first 10 endpoints, it was the
 next 90. Because every new endpoint goes through the same client, adding
-one never means re-deciding how auth works — that decision was made once,
+one never means re-deciding how auth works: that decision was made once,
 in one place, and every call site inherits it for free. That's the actual
 payoff of centralizing this: not that it's elegant, but that it's boring
 in exactly the way that lets 100+ endpoints share one auth story instead

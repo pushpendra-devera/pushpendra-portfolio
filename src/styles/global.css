@@ -28,10 +28,10 @@ body {
   background-color: #111827;
 }
 
-/* ---- Refined surface system (Hero / Featured Projects) ----
-   Crisp bordered panels + a subtle dot texture, replacing the blurred
-   gradient blobs in these two sections specifically (blob gradients read
-   as a generic AI-default choice; kept elsewhere on the page for now). */
+/* ---- Refined surface system ----
+   Crisp bordered panels + a subtle dot texture, used site-wide in place
+   of blurred gradient blobs (blob gradients read as a generic AI-default
+   choice). */
 .surface-card {
   background: #ffffff;
   border: 1px solid #e4dfd3;
@@ -43,7 +43,11 @@ body {
 }
 
 .dot-grid {
-  background-image: radial-gradient(circle, rgba(23, 20, 15, 0.06) 1px, transparent 1px);
+  background-image: radial-gradient(
+    circle,
+    rgba(23, 20, 15, 0.06) 1px,
+    transparent 1px
+  );
   background-size: 22px 22px;
 }
 
@@ -83,15 +87,7 @@ body {
 }
 
 .btn-accent:hover {
-  opacity: 0.88;
-}
-
-/* Soft blurred gradient blobs used as ambient page background (BackgroundBlobs.astro) */
-.gradient-blob {
-  position: absolute;
-  border-radius: 9999px;
-  filter: blur(90px);
-  pointer-events: none;
+  background: color-mix(in srgb, var(--site-accent-solid) 85%, black);
 }
 
 /* Unstyled markup rendered from MDX content (src/content/projects, src/content/notes) */

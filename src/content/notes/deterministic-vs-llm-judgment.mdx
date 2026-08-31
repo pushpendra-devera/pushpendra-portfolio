@@ -1,7 +1,7 @@
 ---
 title: "Not every decision needs a language model"
 slug: "deterministic-vs-llm-judgment"
-summary: "In agent design, the question isn't 'can an LLM do this' — it's whether the decision actually requires reading comprehension, or just comparison."
+summary: "In agent design, the question isn't 'can an LLM do this'; it's whether the decision actually requires reading comprehension, or just comparison."
 publishDate: "2026-08-18"
 tags: ["AI agents", "LLM", "System design"]
 status: "published"
@@ -20,8 +20,8 @@ is valid?
 
 The useful line isn't "simple vs. complex," it's **reading comprehension
 vs. comparison**. Judging whether a posting's described responsibilities
-actually match a candidate's experience requires understanding language —
-that's a real LLM task. Checking whether a stated salary is above a
+actually match a candidate's experience requires understanding language.
+That's a real LLM task. Checking whether a stated salary is above a
 configured minimum, or whether an application is already in a
 non-retryable state, isn't comprehension at all. It's a comparison against
 a value the system already has. Routing that through a model adds cost,
@@ -40,7 +40,7 @@ deterministic too, for the same reason.
 
 ## The payoff that's easy to miss
 
-The obvious benefit is cost and latency — fewer model calls. The less
+The obvious benefit is cost and latency: fewer model calls. The less
 obvious one showed up when a model call actually failed: because the
 deterministic categories don't depend on the model at all, scoring stays
 partially useful even when the LLM call errors out. A system where
