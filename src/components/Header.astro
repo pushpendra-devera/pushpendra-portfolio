@@ -17,19 +17,29 @@ const hasExperience = siteConfig.experience && siteConfig.experience.length > 0;
 const hasEducation = siteConfig.education && siteConfig.education.length > 0;
 ---
 
+<!--
+  Centered with inset-x-0 + mx-auto + a fit-content width, not
+  left-1/2 + -translate-x-1/2: with left: 50% the browser only offers the
+  header the right half of the viewport to size itself in, so the nav
+  wrapped onto two or three rows at every width below ~1340px and covered
+  the top of the page. Text and gaps stay compact until md so the nav fits
+  one row from ~560px up; below that it wraps to two rows on phones.
+-->
 <header
   id="header"
-  class="fixed top-4 sm:top-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 w-[calc(100%-2rem)] sm:w-auto"
+  class="fixed top-4 sm:top-6 inset-x-0 mx-auto z-50 transition-all duration-300 w-[calc(100%-2rem)] max-w-[calc(100%-2rem)] sm:w-fit"
 >
   <nav
     aria-label="Primary"
     class="surface-card rounded-full mx-auto px-4 sm:px-6 py-2.5 sm:py-3 max-w-fit"
   >
-    <ul class="flex items-center gap-3 sm:gap-6 justify-center flex-wrap">
+    <ul
+      class="flex items-center gap-3 sm:gap-4 md:gap-6 justify-center flex-wrap"
+    >
       <li>
         <a
           href="/#about"
-          class="text-sm sm:text-base text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors font-medium"
+          class="text-sm md:text-base text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors font-medium"
         >
           About
         </a>
@@ -39,7 +49,7 @@ const hasEducation = siteConfig.education && siteConfig.education.length > 0;
           <li>
             <a
               href="/projects"
-              class="text-sm sm:text-base text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors font-medium"
+              class="text-sm md:text-base text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors font-medium"
             >
               Projects
             </a>
@@ -51,7 +61,7 @@ const hasEducation = siteConfig.education && siteConfig.education.length > 0;
           <li>
             <a
               href="/notes"
-              class="text-sm sm:text-base text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors font-medium"
+              class="text-sm md:text-base text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors font-medium"
             >
               Notes
             </a>
@@ -63,7 +73,7 @@ const hasEducation = siteConfig.education && siteConfig.education.length > 0;
           <li>
             <a
               href="/#experience"
-              class="text-sm sm:text-base text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors font-medium"
+              class="text-sm md:text-base text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors font-medium"
             >
               Experience
             </a>
@@ -75,7 +85,7 @@ const hasEducation = siteConfig.education && siteConfig.education.length > 0;
           <li>
             <a
               href="/#education"
-              class="text-sm sm:text-base text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors font-medium"
+              class="text-sm md:text-base text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors font-medium"
             >
               Education
             </a>
@@ -89,7 +99,7 @@ const hasEducation = siteConfig.education && siteConfig.education.length > 0;
               href={`mailto:${siteConfig.social.email}?subject=${encodeURIComponent(
                 "Let's talk",
               )}`}
-              class="btn-accent inline-block px-4 py-1.5 rounded-full text-sm sm:text-base font-medium transition-colors"
+              class="btn-accent inline-block px-4 py-1.5 rounded-full text-sm md:text-base font-medium transition-colors"
             >
               Hire Me
             </a>
