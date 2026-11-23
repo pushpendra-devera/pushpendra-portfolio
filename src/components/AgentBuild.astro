@@ -1,0 +1,48 @@
+---
+// Agent build intro. Goes in <head>: the inline script must decide before
+// first paint whether the page should start hidden, otherwise the built
+// page would flash and then blank out. The engine lives in
+// src/scripts/agent-build.ts.
+//
+// Plays when: first visit this browser session, motion allowed, no #hash
+// deep link, not an automated or crawler browser.
+// ?build=1 forces it (still never under reduced motion); ?build=0 disables.
+import "../styles/agent-build.css";
+---
+
+<script is:inline>
+  (function () {
+    const root = document.documentElement;
+    try {
+      const flag = new URLSearchParams(location.search).get("build");
+      if (flag === "0") return;
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      if (flag !== "1") {
+        if (navigator.webdriver) return;
+        if (
+          /bot|crawl|spider|slurp|lighthouse|headless/i.test(
+            navigator.userAgent,
+          )
+        )
+          return;
+        if (location.hash) return;
+        if (sessionStorage.getItem("ab-played")) return;
+      }
+      root.classList.add("ab-pending");
+      // Failsafe: if the engine has not started in time (slow network,
+      // blocked script), show the page as normal.
+      setTimeout(function () {
+        if (!window.__abStarted) root.classList.remove("ab-pending");
+      }, 3500);
+    } catch {
+      // Storage or matchMedia unavailable: just show the page.
+      root.classList.remove("ab-pending");
+    }
+  })();
+</script>
+
+<script>
+  import { initAgentBuild } from "../scripts/agent-build";
+
+  initAgentBuild();
+</script>

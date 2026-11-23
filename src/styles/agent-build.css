@@ -1,0 +1,439 @@
+/* ---- Agent build intro (driven by src/scripts/agent-build.ts) ----
+   Hiding is done per element with data-ab="hidden"; the reveal states set
+   their own short animation. Nothing here applies unless the intro is
+   running, except the Rebuild button. */
+
+html.ab-pending :is(#header, main, body > footer) {
+  opacity: 0 !important;
+}
+
+[data-ab="hidden"] {
+  opacity: 0 !important;
+}
+
+/* Single-line text "types" in: one step per character (the body font is
+   monospace, so the steps line up with glyphs). */
+[data-ab="type"] {
+  animation: ab-type var(--ab-dur, 400ms) steps(var(--ab-steps, 12), jump-start)
+    both;
+}
+
+/* Multi-line text reveals one line at a time, top to bottom. */
+[data-ab="lines"] {
+  animation: ab-lines var(--ab-dur, 500ms) steps(var(--ab-steps, 3), jump-start)
+    both;
+}
+
+[data-ab="box"] {
+  animation: ab-fill var(--ab-dur, 260ms) ease-out both;
+}
+
+[data-ab="media"] {
+  animation: ab-media var(--ab-dur, 320ms) ease-out both;
+}
+
+@keyframes ab-type {
+  from {
+    clip-path: inset(-4px 100% -4px -4px);
+  }
+  to {
+    clip-path: inset(-4px);
+  }
+}
+
+@keyframes ab-lines {
+  from {
+    clip-path: inset(-4px -4px 100% -4px);
+  }
+  to {
+    clip-path: inset(-4px);
+  }
+}
+
+@keyframes ab-fill {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ab-media {
+  from {
+    opacity: 0;
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    filter: none;
+  }
+}
+
+/* ---- Theme tokens ---- */
+
+.ab-root,
+.ab-rebuild {
+  --ab-sel: #a8531f;
+  --ab-sel-text: #ffffff;
+  --ab-ruler-bg: #f7f5f1;
+  --ab-ruler-tick: #b5ad9a;
+  --ab-ruler-text: #55503f;
+  --ab-band: rgba(168, 83, 31, 0.16);
+  --ab-bar-bg: #ffffff;
+  --ab-bar-border: #e4dfd3;
+  --ab-bar-text: #55503f;
+  --ab-bar-strong: #17140f;
+  --ab-r: 18px;
+}
+
+.dark .ab-root,
+.dark .ab-rebuild {
+  --ab-sel: #e0824a;
+  --ab-sel-text: #17140f;
+  --ab-ruler-bg: #1a1816;
+  --ab-ruler-tick: #4a463d;
+  --ab-ruler-text: #b8b2a2;
+  --ab-band: rgba(224, 130, 74, 0.2);
+  --ab-bar-bg: #1a1816;
+  --ab-bar-border: #2b2823;
+  --ab-bar-text: #b8b2a2;
+  --ab-bar-strong: #f2efe8;
+}
+
+/* ---- Overlay ---- */
+
+.ab-root {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+}
+
+.ab-stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  transition: opacity 0.3s ease;
+}
+
+.ab-root.is-leaving .ab-stage,
+.ab-root.is-leaving .ab-bar {
+  opacity: 0;
+}
+
+.ab-ruler {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.ab-root.is-busy .ab-ruler {
+  opacity: 1;
+}
+
+.ab-ruler-x {
+  width: 100%;
+  height: var(--ab-r);
+}
+
+.ab-ruler-y {
+  top: var(--ab-r);
+  width: var(--ab-r);
+  height: calc(100% - var(--ab-r));
+}
+
+.ab-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 1px solid var(--ab-sel);
+  transition: opacity 0.25s ease;
+  will-change: transform;
+}
+
+.ab-frame.is-fading {
+  opacity: 0;
+}
+
+.ab-frame i {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: var(--ab-bar-bg);
+  border: 1px solid var(--ab-sel);
+}
+
+.ab-frame i:nth-child(1) {
+  top: -3.5px;
+  left: -3.5px;
+}
+
+.ab-frame i:nth-child(2) {
+  top: -3.5px;
+  right: -3.5px;
+}
+
+.ab-frame i:nth-child(3) {
+  bottom: -3.5px;
+  left: -3.5px;
+}
+
+.ab-frame i:nth-child(4) {
+  right: -3.5px;
+  bottom: -3.5px;
+}
+
+.ab-size {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translate(-50%, 6px);
+  padding: 3px 5px;
+  border-radius: 3px;
+  background: var(--ab-sel);
+  color: var(--ab-sel-text);
+  font:
+    500 10px/1 "IBM Plex Mono",
+    ui-monospace,
+    monospace;
+  white-space: nowrap;
+}
+
+.ab-agent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: -1.5px 0 0 -2px;
+  transition: opacity 0.3s ease;
+  will-change: transform;
+}
+
+.ab-agent.is-parked {
+  opacity: 0;
+}
+
+.ab-pointer {
+  display: block;
+  filter: drop-shadow(0 1px 1.5px rgb(0 0 0 / 0.3));
+}
+
+.ab-pointer path {
+  fill: var(--ab-c);
+  stroke: #ffffff;
+  stroke-width: 1.25;
+  stroke-linejoin: round;
+}
+
+.ab-tag {
+  position: absolute;
+  top: 17px;
+  left: 13px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--ab-c);
+  color: #ffffff;
+  font:
+    500 10px/1.3 "IBM Plex Mono",
+    ui-monospace,
+    monospace;
+  white-space: nowrap;
+}
+
+/* ---- Status bar ---- */
+
+.ab-bar {
+  position: absolute;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: calc(100vw - 32px);
+  padding: 6px 6px 6px 10px;
+  transform: translateX(-50%);
+  border: 1px solid var(--ab-bar-border);
+  border-radius: 999px;
+  background: var(--ab-bar-bg);
+  color: var(--ab-bar-text);
+  box-shadow: 0 8px 28px rgb(0 0 0 / 0.12);
+  font:
+    12px/1 "IBM Plex Mono",
+    ui-monospace,
+    monospace;
+  white-space: nowrap;
+  pointer-events: auto;
+  transition: opacity 0.3s ease;
+}
+
+.ab-bar b {
+  color: var(--ab-bar-strong);
+  font-weight: 600;
+}
+
+.ab-avatars {
+  display: flex;
+}
+
+.ab-avatars i {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  margin-left: -5px;
+  border: 2px solid var(--ab-bar-bg);
+  border-radius: 999px;
+  background: var(--ab-c);
+  color: #ffffff;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 600;
+}
+
+.ab-avatars i:first-child {
+  margin-left: 0;
+}
+
+.ab-progress {
+  position: relative;
+  width: 64px;
+  height: 3px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--ab-bar-border);
+}
+
+.ab-progress i {
+  position: absolute;
+  inset: 0;
+  background: var(--ab-sel);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.2s ease;
+}
+
+.ab-status:empty {
+  display: none;
+}
+
+.ab-bar.is-done .ab-status {
+  color: var(--ab-bar-strong);
+}
+
+.ab-skip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border: 1px solid var(--ab-bar-border);
+  border-radius: 999px;
+  color: var(--ab-bar-strong);
+  font: inherit;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.ab-skip:hover {
+  border-color: var(--ab-sel);
+  color: var(--ab-sel);
+}
+
+.ab-skip:focus-visible,
+.ab-rebuild:focus-visible {
+  outline: 2px solid var(--ab-sel);
+  outline-offset: 2px;
+}
+
+.ab-kbd {
+  padding: 1px 4px;
+  border: 1px solid var(--ab-bar-border);
+  border-radius: 3px;
+  font-size: 10px;
+}
+
+@media (max-width: 639px) {
+  .ab-root {
+    --ab-r: 14px;
+  }
+
+  .ab-avatars,
+  .ab-progress,
+  .ab-kbd {
+    display: none;
+  }
+
+  .ab-bar {
+    gap: 8px;
+    font-size: 11px;
+  }
+
+  .ab-bar.is-waiting .ab-count {
+    display: none;
+  }
+}
+
+/* ---- Rebuild button (after the intro, and on return visits) ---- */
+
+.ab-rebuild {
+  position: fixed;
+  right: 16px;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border: 1px solid var(--ab-bar-border);
+  border-radius: 999px;
+  background: var(--ab-bar-bg);
+  color: var(--ab-bar-text);
+  font:
+    500 12px/1 "IBM Plex Mono",
+    ui-monospace,
+    monospace;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.ab-rebuild.is-shown {
+  opacity: 1;
+  transform: none;
+}
+
+.ab-rebuild:hover {
+  border-color: var(--ab-sel);
+  color: var(--ab-sel);
+}
+
+.ab-rebuild svg path {
+  fill: currentColor;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ab-rebuild {
+    display: none;
+  }
+}
+
+@media print {
+  [data-ab] {
+    opacity: 1 !important;
+    animation: none !important;
+  }
+
+  .ab-root,
+  .ab-rebuild {
+    display: none !important;
+  }
+}
